@@ -8,11 +8,23 @@ package Encryption;
 import java.math.BigInteger;
 
 /**
- *
+ * An exchangeable encryption key
  * @author flodavid
  */
 public class PublicKey {
-    BigInteger n;
-    Integer e;
+    private BigInteger n;
+    private BigInteger e;
     
+    public PublicKey(BigInteger n, BigInteger public_exponent) {
+        this.n= n;
+        this.e= public_exponent;
+    }
+    
+    public String toString() {
+        return n +", "+ e;
+    }
+    
+    public void show(){
+        System.out.println(this.toString());
+    }
 }
