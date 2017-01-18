@@ -13,10 +13,17 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import Encryption.*;
+
 public class Client {
 
-    public static void main(String[] args) {
-        
+    /**
+     * Initialize connection with a distant or local server
+     * @param args : Parameters of the connection :
+     *  "args[0]" is the port and "args[1]" the address
+     */
+    public void initConnection(String args[]) {
+                
         String s_port;
         if (args.length < 1) {
             s_port = "2008";
@@ -55,5 +62,12 @@ public class Client {
         } catch (Exception e) {
             System.err.println("impossible de creer");
         }
+    }
+    
+    public static void main(String[] args) {
+        KeyGenerator generator= new KeyGenerator();
+        PublicKey key= generator.generatePublicKey();
+        
+        key.show();
     }
 }

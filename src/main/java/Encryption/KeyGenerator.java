@@ -12,6 +12,9 @@ import java.math.BigInteger;
 import java.util.Random;
 
 /**
+ * Used to generate private and public keys in order to able two speakers
+ * to communicate privately
+ *
  * @author flodavid
  */
 public class KeyGenerator {
@@ -22,8 +25,16 @@ public class KeyGenerator {
     private BigInteger m;
     private BigInteger n;
 
-    public BigInteger generateKey() {
+    BigInteger e;
+
+    /**
+     * Generate a public key
+     * @return a generated public key
+     */
+    public PublicKey generatePublicKey() {
         Random rand = new Random();
+
+        // p and q definition
         BigInteger p = BigInteger.probablePrime(100, rand);
         BigInteger q = BigInteger.probablePrime(100, rand);
 
@@ -34,7 +45,17 @@ public class KeyGenerator {
         BigInteger p_less = p.subtract(new BigInteger("1") );
         m = p_less.multiply(q.subtract(new BigInteger("1") ));
 
-        return n;
+        // e (public exponent) definition
+        e= new BigInteger("2");
+
+        while ( m.gcd(e) != new BigInteger("1") ) {
+            e.nextProbablePrime();
+        }
+
+        // Create the key from calculated values
+        PublicKey key= new PublicKey(n, e);
+
+        return key;
     }
 
     public BigInteger generatePrivateKey() {
