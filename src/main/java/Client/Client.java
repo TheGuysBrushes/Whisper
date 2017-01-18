@@ -69,5 +69,7 @@ public class Client {
         PublicKey key= generator.generatePublicKey();
         
         key.show();
+        
+//        generator.generatePrivateKey();
     }
 }

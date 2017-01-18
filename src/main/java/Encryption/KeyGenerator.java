@@ -25,8 +25,6 @@ public class KeyGenerator {
     private BigInteger m;
     private BigInteger n;
 
-    BigInteger e;
-
     /**
      * Generate a public key
      * @return a generated public key
