@@ -16,3 +16,4 @@ Supprimerait sources.iml
 Supprimerait src/main/resources/
 Supprimerait target/
 /target/
+Supprimerait src/main/java/Sandbox.java

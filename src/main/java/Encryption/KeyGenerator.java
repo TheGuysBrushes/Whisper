@@ -5,8 +5,7 @@
  */
 package Encryption;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -18,14 +17,12 @@ import java.util.Random;
  * @author flodavid
  */
 public class KeyGenerator {
-    private final static Logger logger = LoggerFactory.getLogger(KeyGenerator.class);
+    private final static Logger logger = Logger.getLogger(KeyGenerator.class);
 
 
     private BigInteger e;
     private BigInteger m;
     private BigInteger n;
-
-    BigInteger e;
 
     /**
      * Generate a public key
@@ -65,7 +62,7 @@ public class KeyGenerator {
         BigInteger r = new BigInteger("12");
 
         BigInteger pgcd = e.gcd(m);
-        logger.debug("Valeur du pgcd({},{}) : {}",e,m,pgcd);
+        logger.debug("Valeur du pgcd("+e+","+m+") : "+pgcd);
 
         return u;
     }
