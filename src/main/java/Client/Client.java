@@ -71,8 +71,14 @@ public class Client {
         key.show();
         
         RSAEncryptor encryptor= new RSAEncryptor();
-        encryptor.toASCII("Bonjour !");
+        int[] encrypter_msg= encryptor.encrypt("Bonjour !", key);
         
+        String msg="" + encrypter_msg[0];
+        for (int i=1; i < encrypter_msg.length; ++i) {
+            msg+= " "+ encrypter_msg[i];
+        }
+        
+        System.out.println("Message encrypté : "+ msg);
         
 //        generator.generatePrivateKey();
     }

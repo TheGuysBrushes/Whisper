@@ -6,6 +6,7 @@
 package Encryption;
 
 import org.apache.log4j.Logger;
+import java.math.BigInteger;
 
 /**
  *
@@ -18,20 +19,27 @@ public class RSAEncryptor implements Encryptor {
     
     /**
      * Encrypt a message with a given key
-     * @param ASCIIMessage
+     * @param message
      * @param key
      * @return 
      */
     @Override
-    public int[] encrypt(byte[] ASCIIMessage, PublicKey key) {
+    public int[] encrypt(String message, PublicKey key) {
+        byte[] ASCIIMessage= toASCII(message);
+        
         int encrypted_message[]= new int[ASCIIMessage.length];
         
+        for (int i= 0; i < ASCIIMessage.length; ++i) {
+            BigInteger ASCIIChar= BigInteger.valueOf((long)(ASCIIMessage[i]));
+            encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) )
+                                    .intValue();
+        }
         
         return encrypted_message;
     }
     
     /**
-     * 
+     * Transform the message in ASCII numbers
      * @param message
      * @return 
      */
@@ -39,7 +47,6 @@ public class RSAEncryptor implements Encryptor {
                 
         byte encrypted_message[]= new byte[message.length()];
         
-        // Transform the message in ASCII numbers
         for (int i= 0; i < message.length(); ++i) {
             encrypted_message[i]= (byte)(message.charAt(i));
         }
