@@ -13,9 +13,9 @@ public interface Encryptor {
 
     /**
      * Encrypt a message with a given key
-     * @param message
+     * @param ASCIIMessage
      * @param key
      * @return 
      */
-    public String encrypt(String message, PublicKey key);
+    public int[] encrypt(byte[] ASCIIMessage, PublicKey key);
 }

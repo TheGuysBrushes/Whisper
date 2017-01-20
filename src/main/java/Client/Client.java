@@ -70,6 +70,10 @@ public class Client {
         
         key.show();
         
+        RSAEncryptor encryptor= new RSAEncryptor();
+        encryptor.toASCII("Bonjour !");
+        
+        
 //        generator.generatePrivateKey();
     }
 }

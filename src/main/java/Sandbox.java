@@ -20,9 +20,9 @@ public class Sandbox {
         //generator.setM(b);
 
         PublicKey publicKey = generator.generatePublicKey();
-        logger.info("Clé publique : "+publicKey.toString());
+        logger.info("Clé publique : "+publicKey);
 
         PrivateKey privateKey = generator.generatePrivateKey();
-        logger.info("Clé privée : "+ privateKey.toString());
+        logger.info("Clé privée : "+ privateKey);
     }
 }

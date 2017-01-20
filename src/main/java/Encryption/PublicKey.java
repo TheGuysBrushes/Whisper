@@ -27,4 +27,12 @@ public class PublicKey {
     public void show(){
         System.out.println(this.toString());
     }
+    
+    public BigInteger get_e() {
+        return e;
+    }
+    
+    public BigInteger get_n() {
+        return n;
+    }
 }
