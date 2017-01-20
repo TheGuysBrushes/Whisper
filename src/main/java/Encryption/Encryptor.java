@@ -18,4 +18,12 @@ public interface Encryptor {
      * @return 
      */
     public int[] encrypt(byte[] ASCIIMessage, PublicKey key);
+
+    /**
+     * Decrypt a message with a given key
+     * @param cryptedMessage
+     * @param key
+     * @return
+     */
+    public String decrypt(int[] cryptedMessage, PrivateKey key);
 }
