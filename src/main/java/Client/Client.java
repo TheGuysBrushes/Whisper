@@ -14,6 +14,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import Encryption.*;
+import java.math.BigInteger;
 
 public class Client {
 
@@ -66,12 +67,17 @@ public class Client {
     
     public static void main(String[] args) {
         KeyGenerator generator= new KeyGenerator();
+        generator.initParameters();
+        
+//        generator.setN(new BigInteger("5141"));
         PublicKey key= generator.generatePublicKey();
         
         key.show();
         
+        System.out.println("n: " + key.get_n());
+        
         RSAEncryptor encryptor= new RSAEncryptor();
-        int[] encrypter_msg= encryptor.encrypt("Bonjour !", key);
+        BigInteger[] encrypter_msg= encryptor.encrypt("Bonjour !", key);
         
         String msg="" + encrypter_msg[0];
         for (int i=1; i < encrypter_msg.length; ++i) {

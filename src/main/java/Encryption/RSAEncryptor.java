@@ -26,15 +26,14 @@ public class RSAEncryptor implements Encryptor {
      * @return
      */
     @Override
-    public int[] encrypt(String message, PublicKey key) {
+    public BigInteger[] encrypt(String message, PublicKey key) {
         byte[] ASCIIMessage= toASCII(message);
 
-        int encrypted_message[]= new int[ASCIIMessage.length];
+        BigInteger encrypted_message[]= new BigInteger[ASCIIMessage.length];
 
         for (int i= 0; i < ASCIIMessage.length; ++i) {
             BigInteger ASCIIChar= BigInteger.valueOf((long)(ASCIIMessage[i]));
-            encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) )
-                                    .intValue();
+            encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) );
         }
         
         return encrypted_message;
