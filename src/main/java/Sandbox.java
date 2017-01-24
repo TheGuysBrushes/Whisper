@@ -66,27 +66,49 @@ public class Sandbox {
 
         if ("c".equals(mode)) {
             // créer client
-            try (DatagramSocket socket = new DatagramSocket()) {
+
+            KeyGenerator generator = new KeyGenerator();
+            generator.initParameters();
+            PublicKey publicKey = generator.generatePublicKey();
+            logger.info("Clé publique : " + publicKey);
+
+            PrivateKey privateKey = generator.generatePrivateKey();
+            logger.info("Clé privée : " + privateKey);
+            RSAEncryptor encryptor = new RSAEncryptor();
+
+            try (Socket socket = new Socket(InetAddress.getByName(address),2000)) {
                 String s = "message";
                 byte[] buf = s.getBytes();
-                InetAddress adresse = InetAddress.getByName(address);
                 int port = Integer.parseInt("2000");
-                DatagramPacket packet = new DatagramPacket(buf, buf.length, adresse, port);
-                socket.send(packet);
 
-                //Reception
-                byte[] inBuf = new byte[1024];
-                DatagramPacket packetReceive = new DatagramPacket(inBuf, inBuf.length);
-                socket.receive(packetReceive);
+                ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                os.writeObject(publicKey);
+                os.flush();
 
-                String reponse = new String(packetReceive.getData(), 0, packetReceive.getLength());
-                logger.info("Réponse : "+ reponse);
-            }catch (SocketException e) {
-               logger.debug("SocketException",e);
+                ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+                PrivateKey serverKey = (PrivateKey) is.readObject();
+
+                String message ="test";
+                BigInteger[] crypt = encryptor.encrypt(message,publicKey);
+                String messageCrypted = crypt[0].toString();
+                for (int i = 1; i < crypt.length; i++) {
+                    messageCrypted += "%" + crypt[i];
+                }
+                os.writeObject(messageCrypted);
+                os.flush();
+
+                String reponse = (String) is.readObject();
+                String decryptedReponse = encryptor.decrypt(reponse, serverKey);
+                logger.info("Réponse : "+reponse);
+
+            } catch (SocketException e) {
+                logger.debug("SocketException", e);
             } catch (UnknownHostException e) {
                 logger.debug("UnknownHostException", e);
             } catch (IOException e) {
                 logger.debug("IOException", e);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         } else {
             // créer serveur
