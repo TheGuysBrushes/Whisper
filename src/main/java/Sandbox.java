@@ -41,11 +41,11 @@ public class Sandbox {
 
                 String reponse = new String(packetReceive.getData(), 0, packetReceive.getLength());
             }catch (SocketException e) {
-                e.printStackTrace();
+               logger.debug("SocketException",e);
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                logger.debug("UnknownHostException",e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.debug("IOException",e);
             }
         } else {
             // créer serveur
@@ -71,9 +71,9 @@ public class Sandbox {
                     socket.send(packetSend);
                 }
             } catch (SocketException e) {
-                e.printStackTrace();
+                logger.debug("SocketException",e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.debug("IOException",e);
             }
         }
 /*
