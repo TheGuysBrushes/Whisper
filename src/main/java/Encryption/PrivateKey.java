@@ -22,4 +22,16 @@ public class PrivateKey {
     public void show(){
         System.out.println(this.toString());
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public BigInteger getN() { return n; }
+    
+    /**
+     * 
+     * @return 
+     */
+    public BigInteger getU() { return u; }
 }

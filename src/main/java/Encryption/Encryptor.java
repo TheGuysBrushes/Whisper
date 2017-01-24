@@ -15,11 +15,11 @@ public interface Encryptor {
 
     /**
      * Encrypt a message with a given key
-     * @param ASCIIMessage
+     * @param message
      * @param key
      * @return 
      */
-    public BigInteger[] encrypt(String ASCIIMessage, PublicKey key);
+    public BigInteger[] encrypt(String message, PublicKey key);
 
     /**
      * Decrypt a message with a given key
@@ -27,5 +27,5 @@ public interface Encryptor {
      * @param key
      * @return
      */
-    public String decrypt(int[] cryptedMessage, PrivateKey key);
+    public String decrypt(BigInteger[] cryptedMessage, PrivateKey key);
 }
