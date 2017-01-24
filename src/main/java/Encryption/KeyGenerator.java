@@ -23,14 +23,14 @@ public class KeyGenerator {
     private BigInteger m;
     private BigInteger e;
     private BigInteger u;
-    
-    public boolean is_initiated= false;
-    public boolean private_initiated= false;
+
+    public boolean is_initiated = false;
+    public boolean private_initiated = false;
 
     public void initParameters() {
 
         logger.info("Key generation parameters initialization");
-        
+
         Random rand = new Random();
 
         // p and q definition
@@ -50,13 +50,13 @@ public class KeyGenerator {
         while ((m.gcd(e)).compareTo(new BigInteger("1")) != 0) {
             e = e.nextProbablePrime();
         }
-        
+
         // set flag to indicate values have been initiated
-        is_initiated= true;
+        is_initiated = true;
     }
-    
+
     private void calculateU() {
-                BigInteger r_prec = e;
+        BigInteger r_prec = e;
         BigInteger u_prec = new BigInteger("1");
         BigInteger v_prec = new BigInteger("0");
         BigInteger r = m;
@@ -65,6 +65,8 @@ public class KeyGenerator {
         BigInteger r_next;
         BigInteger u_next;
         BigInteger v_next;
+
+        BigInteger res = e.gcd(m);
 
         logger.debug("Lancement avec paramètres : ");
         logger.debug("r_prec = " + r_prec + "\tr = " + r);
@@ -91,16 +93,16 @@ public class KeyGenerator {
             logger.debug("r = " + r_next);
             logger.debug("u = " + u_next);
             logger.debug("v = " + v_next + "\n");
-        } while (r_next.compareTo(new BigInteger("0")) != 0);
-        
-        private_initiated= true;
+        } while (r_next.compareTo(res) != 0);
+
+        private_initiated = true;
     }
-    
-    public void eraseParameters(){
-        is_initiated= false;
-        private_initiated= false;
+
+    public void eraseParameters() {
+        is_initiated = false;
+        private_initiated = false;
     }
-    
+
     /**
      * Generate a public key
      *
@@ -111,7 +113,7 @@ public class KeyGenerator {
             initParameters();
         }
         logger.info("Public key generation");
-        
+
         // Create the key from calculated values
         PublicKey key = new PublicKey(n, e);
 
@@ -119,11 +121,11 @@ public class KeyGenerator {
     }
 
     public PrivateKey generatePrivateKey() {
-        
+
         if (!is_initiated) {
             initParameters();
         }
-        
+
         // U value calculation if needed
         if (!private_initiated) {
             calculateU();

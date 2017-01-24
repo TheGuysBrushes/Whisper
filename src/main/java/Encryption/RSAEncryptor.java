@@ -37,6 +37,7 @@ public class RSAEncryptor implements Encryptor {
         for (int i= 0; i < ASCIIMessage.length; ++i) {
             BigInteger ASCIIChar= BigInteger.valueOf((long)(ASCIIMessage[i]));
             encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) );
+            logger.debug(ASCIIChar + " encrypted to " + encrypted_message[i]);
         }
 
         return encrypted_message;
@@ -57,6 +58,7 @@ public class RSAEncryptor implements Encryptor {
         for (int i = 0; i < cryptedMessage.length; i++) {
             BigInteger charCrypted = cryptedMessage[i];
             BigInteger charDecrypted = charCrypted.modPow(key.getU(), key.getN());
+            logger.debug(charCrypted + " decrypted to "+charDecrypted);
             decryptedBytes[i] = charDecrypted.byteValue();
         }
 
@@ -81,7 +83,7 @@ public class RSAEncryptor implements Encryptor {
         for (int i = 1; i < message.length(); ++i) {
             ascii_message += "; " + encrypted_message[i];
         }
-        logger.info("message to ASCII : " + ascii_message);
+        logger.debug("message to ASCII : " + ascii_message);
 
 //        logger.info("Encrypted message : " + encrypted_message);
         return encrypted_message;
@@ -95,7 +97,7 @@ public class RSAEncryptor implements Encryptor {
         String decryptedMessage = "";
 
         for (byte charByte : encryptedMessage) {
-            logger.info("byte ASCII : "+ charByte);
+            logger.debug("byte ASCII : "+ charByte);
             decryptedMessage += (char) charByte;
         }
 
