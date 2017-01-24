@@ -48,12 +48,28 @@ public class Sandbox {
     public static void main(String[] args) {
         //testASCII();
 
-        if ("c".equals(args[0])) {
+        String mode;
+        if (args.length < 1) {
+            mode = "c";
+        } else {
+            mode = "s";
+        }
+
+        String address;
+        if (args.length > 1) {
+            address = args[2];
+        } else {
+            address = "localhost";
+        }
+
+        address = "192.168.99.107";
+
+        if ("c".equals(mode)) {
             // créer client
             try (DatagramSocket socket = new DatagramSocket()) {
                 String s = "message";
                 byte[] buf = s.getBytes();
-                InetAddress adresse = InetAddress.getByName("localhost");
+                InetAddress adresse = InetAddress.getByName(address);
                 int port = Integer.parseInt("2000");
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, adresse, port);
                 socket.send(packet);
@@ -64,8 +80,9 @@ public class Sandbox {
                 socket.receive(packetReceive);
 
                 String reponse = new String(packetReceive.getData(), 0, packetReceive.getLength());
-            } catch (SocketException e) {
-                logger.debug("SocketException", e);
+                logger.info("Réponse : "+ reponse);
+            }catch (SocketException e) {
+               logger.debug("SocketException",e);
             } catch (UnknownHostException e) {
                 logger.debug("UnknownHostException", e);
             } catch (IOException e) {
@@ -129,28 +146,6 @@ public class Sandbox {
                 e.printStackTrace();
             }
         }
-/*
-        KeyGenerator generator = new KeyGenerator();
-        BigInteger a = new BigInteger("5141");
-        BigInteger b = new BigInteger("4992");
-
-        generator.setE(a);
-        generator.setM(b);
-
-        PublicKey publicKey = generator.generatePublicKey();
-        logger.info("Clé publique : " + publicKey);
-
-        PrivateKey privateKey = generator.generatePrivateKey();
-        logger.info("Clé privée : " + privateKey);
-
-        RSAEncryptor encryptor = new RSAEncryptor();
-
-        BigInteger[] encryptedHello = encryptor.encrypt("Bonjour !", publicKey);
-
-        String decryptedMSG = encryptor.decrypt(encryptedHello, privateKey);
-
-        logger.info("Message décrypté  : " + decryptedMSG);
-*/
 
     }
 }
