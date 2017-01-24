@@ -48,79 +48,17 @@ public class Sandbox {
 
 
     public static void main(String[] args) {
-        //testASCII();
-
-        String mode;
-        if (args.length < 1) {
-            mode = "c";
-        } else {
-            mode = "s";
-        }
-
-        String address;
-        if (args.length > 1) {
-            address = args[2];
-        } else {
-            address = "localhost";
-        }
-
-        address = "192.168.99.107";
-
-        if ("c".equals(mode)) {
-            
-            Client client = new Client();
-            client.initConnection(args);
-            
-            
+        //testASCII();        
         
-            // créer client
-
-            KeyGenerator generator = new KeyGenerator();
-            generator.initParameters();
-            PublicKey publicKey = generator.generatePublicKey();
-            logger.info("Clé publique : " + publicKey);
-
-            PrivateKey privateKey = generator.generatePrivateKey();
-            logger.info("Clé privée : " + privateKey);
-            RSAEncryptor encryptor = new RSAEncryptor();
-
-            try (Socket socket = new Socket(InetAddress.getByName(address),2000)) {
-                String s = "message";
-                byte[] buf = s.getBytes();
-                int port = Integer.parseInt("2000");
-
-                ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-                os.writeObject(publicKey);
-                os.flush();
-
-                ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-                PrivateKey serverKey = (PrivateKey) is.readObject();
-
-                String message ="test";
-                BigInteger[] crypt = encryptor.encrypt(message,publicKey);
-                String messageCrypted = crypt[0].toString();
-                for (int i = 1; i < crypt.length; i++) {
-                    messageCrypted += "%" + crypt[i];
-                }
-                os.writeObject(messageCrypted);
-                os.flush();
-
-                String reponse = (String) is.readObject();
-                String decryptedReponse = encryptor.decrypt(reponse, serverKey);
-                logger.info("Réponse : "+reponse);
-
-            } catch (SocketException e) {
-                logger.debug("SocketException", e);
-            } catch (UnknownHostException e) {
-                logger.debug("UnknownHostException", e);
-            } catch (IOException e) {
-                logger.debug("IOException", e);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+        String s_port;
+        if (args.length < 1) {
+            s_port = "2000";
         } else {
+            s_port = args[0];
+        }
+
             // créer serveur
-            int port = Integer.parseInt("2000");
+            int port = Integer.parseInt(s_port);
             boolean continuer = true;
 
             KeyGenerator generator = new KeyGenerator();
@@ -175,7 +113,6 @@ public class Sandbox {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
 
     }
 }
