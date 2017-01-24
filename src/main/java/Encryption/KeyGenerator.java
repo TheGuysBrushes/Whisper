@@ -68,7 +68,7 @@ public class KeyGenerator {
         
         private_initiated= true;
     }
-    
+
     private void calculateU() {
         BigInteger r_prec = e;
         BigInteger u_prec = new BigInteger("1");
