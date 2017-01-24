@@ -45,6 +45,27 @@ public class RSAEncryptor implements Encryptor {
 
         return encrypted_message;
     }
+    
+    /**
+     * Encrypt a message with a given key
+     *
+     * @param message
+     * @param key
+     * @return
+     */
+    @Override
+    public String encryptToString(String message, PublicKey key) {
+        BigInteger[] encrypted_bytes = encrypt(message, key);
+        
+        String encrypted_message= encrypted_bytes[0].toString();
+        for (int i= 1; i < encrypted_bytes.length; ++i) {
+            BigInteger encrypted_char= encrypted_bytes[i];
+            
+            encrypted_message+= "%" + encrypted_char.toString();
+        }
+        
+        return encrypted_message;
+    }
 
     /**
      * Decrypt a message with a given key
@@ -77,6 +98,7 @@ public class RSAEncryptor implements Encryptor {
      * @param key
      * @return
      */
+    @Override
     public String decrypt(String cryptedMessage, PrivateKey key) {
         String[] tabChar = cryptedMessage.split("%");
 

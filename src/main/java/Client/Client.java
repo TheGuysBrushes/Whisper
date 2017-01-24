@@ -15,8 +15,15 @@ import java.net.InetAddress;
 
 import Encryption.*;
 import java.math.BigInteger;
+import org.apache.log4j.Logger;
 
 public class Client {
+    private final static Logger logger = Logger.getLogger(Client.class);
+    
+    public PublicKey myPublicKey;
+    public PrivateKey myPrivateKey;
+    
+    public PrivateKey serverPrivateKey;
 
     /**
      * Initialize connection with a distant or local server
@@ -25,31 +32,40 @@ public class Client {
      */
     public void initConnection(String args[]) {
                 
-        String s_port;
-        if (args.length < 1) {
-            s_port = "2008";
-        } else {
-            s_port = args[0];
-        }
-        
         String message;
         if (args.length < 1) {
             message = "hello";
         } else {
-            message = args[1];
+            message = args[0];
         }
+        
+        String address;
+        if (args.length < 2) {
+            address = "192.168.99.107";
+        } else {
+            address = args[1];
+        }
+        
+        String s_port;
+        if (args.length < 2) {
+            s_port = "2008";
+        } else {
+            s_port = args[1];
+        }
+        
+        generateKeys(address);
         
         //Client
         try {
             //Envoi
             DatagramSocket socket = new DatagramSocket();
-            String s = message;
-            byte[] buf = s.getBytes();
-            InetAddress adresse = InetAddress.getByName("192.168.99.107");
-//            InetAddress adresse = InetAddress.getByName("192.168.43.78");
+            String key = myPublicKey.get_n() + "%" + myPublicKey.get_e();
+            byte[] buf = key.getBytes();
+            InetAddress adresse = InetAddress.getByName(address);
             
             int port = Integer.parseInt(s_port);
             DatagramPacket packet = new DatagramPacket(buf, buf.length, adresse, port);
+            
             socket.send(packet);
 
             //Reception
@@ -65,27 +81,48 @@ public class Client {
         }
     }
     
-    public static void main(String[] args) {
+    public void generateKeys(String address) {
         KeyGenerator generator= new KeyGenerator();
-        generator.initParameters();
         
-//        generator.setN(new BigInteger("5141"));
-        PublicKey key= generator.generatePublicKey();
+        PublicKey publicKey = generator.generatePublicKey();
+        logger.info("Clé publique : "+publicKey);
+
+        PrivateKey privateKey = generator.generatePrivateKey();
+        logger.debug("Clé privée : "+ privateKey);        
+    }
+
+    public String encryptMessage(String message) {
+        Encryptor encryptor = new RSAEncryptor();
+                
+        return encryptor.encryptToString(message, myPublicKey);
+    }
+    
+    public String decryptMessage(String encrypted_message) {
+        Encryptor encryptor = new RSAEncryptor();
+                
+        return encryptor.decrypt(encrypted_message, serverPrivateKey);
+    }
+
+    public void sendEncryptedMessage(String message) {
+        Encryptor encryptor = new RSAEncryptor();
         
-        key.show();
+        BigInteger[] encryptedHello = encryptor.encrypt(message, myPublicKey);   
+    }
+    
+    public String receiveEncryptedMessage(String address) {
         
-        System.out.println("n: " + key.get_n());
-        
-        RSAEncryptor encryptor= new RSAEncryptor();
-        BigInteger[] encrypter_msg= encryptor.encrypt("Bonjour !", key);
-        
-        String msg="" + encrypter_msg[0];
-        for (int i=1; i < encrypter_msg.length; ++i) {
-            msg+= " "+ encrypter_msg[i];
+        if (serverPrivateKey == null) {
+            logger.error("Je n'ai pas recu la clé public du serveur");
+            return "";
         }
         
-        System.out.println("Message encrypté : "+ msg);
+//        logger.info("Message décrypté  : "+ decryptedMSG);
+
+        return "";
+    }
+    
+    public static void main(String[] args) {
         
-//        generator.generatePrivateKey();
+        
     }
 }
