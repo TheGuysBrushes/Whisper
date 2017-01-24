@@ -54,6 +54,20 @@ public class KeyGenerator {
         // set flag to indicate values have been initiated
         is_initiated = true;
     }
+    
+    public void defineParameters(BigInteger N, BigInteger M, BigInteger E) {
+        this.n= N;
+        this.m= M;
+        this.e= E;
+        
+        is_initiated= true;
+    }
+    
+    public void defineU(BigInteger U) {
+        this.u= U;
+        
+        private_initiated= true;
+    }
 
     private void calculateU() {
         BigInteger r_prec = e;
