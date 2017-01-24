@@ -18,17 +18,47 @@ public class Sandbox {
         byte[] ascii_message = encryptor.toASCII("Bonjour !");
         logger.info("Traduction de l'ASCII : "+ encryptor.fromASCII(ascii_message));
     }
+    
+    public static void testEncryptDecrypt(String message) {
+        
+        KeyGenerator generator= new KeyGenerator();
+        generator.initParameters();
+        
+        BigInteger n = new BigInteger("5141");
+        BigInteger e = new BigInteger("7");
+        BigInteger u = new BigInteger("4279");
+        
+        generator.defineParameters(n, new BigInteger("0"), e);
+        generator.defineU(u);
+        
+                PublicKey publicKey = generator.generatePublicKey();
+        logger.info("Clé publique : "+publicKey);
+
+        PrivateKey privateKey = generator.generatePrivateKey();
+        logger.info("Clé privée : "+ privateKey);
+        
+        Encryptor encryptor = new RSAEncryptor();
+        
+        BigInteger[] encryptedHello = encryptor.encrypt(message, publicKey);
+        
+        String decryptedMSG = encryptor.decrypt(encryptedHello, privateKey);
+        
+        logger.info("Message décrypté  : "+ decryptedMSG);
+    }
+    
 
     public static void main(String[] args) {
-        testASCII();
+//        testASCII();
+        testEncryptDecrypt("Bonjour !");
+        testEncryptDecrypt("Bravo");
         
 //        KeyGenerator generator= new KeyGenerator();
 //        BigInteger a = new BigInteger("5141");
         //BigInteger b = new BigInteger("4992");
-
+        
         //generator.setE(a);
         //generator.setM(b);
-
+        
 //        PublicKey publicKey = generator.generatePublicKey();
 //        logger.info("Clé publique : "+publicKey);
 //

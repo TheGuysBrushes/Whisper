@@ -33,10 +33,15 @@ public class RSAEncryptor implements Encryptor {
 
         BigInteger encrypted_message[]= new BigInteger[ASCIIMessage.length];
 
+        String encrypted_msg = "";
         for (int i= 0; i < ASCIIMessage.length; ++i) {
             BigInteger ASCIIChar= BigInteger.valueOf((long)(ASCIIMessage[i]));
             encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) );
+            
+            encrypted_msg+= encrypted_message[i].toString() + ";";
         }
+        
+        logger.info("Message encrypté : "+ encrypted_msg);
         
         return encrypted_message;
     }
@@ -94,7 +99,6 @@ public class RSAEncryptor implements Encryptor {
         String decryptedMessage = "";
 
         for (byte charByte : encryptedMessage) {
-            logger.info("byte ASCII : "+ charByte);
             decryptedMessage += (char) charByte;
         }
 
