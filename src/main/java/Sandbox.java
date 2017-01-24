@@ -5,6 +5,8 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
 
+import Client.Client;
+
 /**
  * Created by etudiant on 18/01/17.
  */
@@ -65,6 +67,12 @@ public class Sandbox {
         address = "192.168.99.107";
 
         if ("c".equals(mode)) {
+            
+            Client client = new Client();
+            client.initConnection(args);
+            
+            
+        
             // créer client
 
             KeyGenerator generator = new KeyGenerator();

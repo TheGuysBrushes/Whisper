@@ -28,4 +28,20 @@ public interface Encryptor {
      * @return
      */
     public String decrypt(BigInteger[] cryptedMessage, PrivateKey key);
+    
+    /**
+     * Encrypt a message with a given key
+     * @param message
+     * @param key
+     * @return 
+     */
+    public String encryptToString(String message, PublicKey key);
+
+    /**
+     * Decrypt a message with a given key
+     * @param cryptedMessage
+     * @param key
+     * @return
+     */
+    public String decrypt(String cryptedMessage, PrivateKey key);
 }
