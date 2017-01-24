@@ -71,6 +71,24 @@ public class RSAEncryptor implements Encryptor {
     }
 
     /**
+     * Decrypt a message with a given key
+     *
+     * @param cryptedMessage
+     * @param key
+     * @return
+     */
+    public String decrypt(String cryptedMessage, PrivateKey key) {
+        String[] tabChar = cryptedMessage.split("%");
+
+        BigInteger[] tab = new BigInteger[tabChar.length];
+        for (int i=0; i<tabChar.length; i++) {
+            tab[i] = new BigInteger(tabChar[i]);
+        }
+
+        return decrypt(tab,key);
+    }
+
+    /**
      * @param message
      * @return
      */
