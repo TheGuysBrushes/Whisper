@@ -9,13 +9,17 @@ import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 
-import java.math.BigInteger;
-
 /**
  * @author flodavid
  */
 public class RSAEncryptor implements Encryptor {
     private final static Logger logger = Logger.getLogger(RSAEncryptor.class);
+
+//    private BigInteger r, u, v, n;
+
+//    public RSAEncryptor(BigInteger u, BigInteger n){
+
+//    }
 
     /**
      * Encrypt a message with a given key
@@ -25,15 +29,14 @@ public class RSAEncryptor implements Encryptor {
      * @return
      */
     @Override
-    public int[] encrypt(String message, PublicKey key) {
-        byte[] ASCIIMessage = toASCII(message);
+    public BigInteger[] encrypt(String message, PublicKey key) {
+        byte[] ASCIIMessage= toASCII(message);
 
-        int encrypted_message[] = new int[ASCIIMessage.length];
+        BigInteger encrypted_message[]= new BigInteger[ASCIIMessage.length];
 
-        for (int i = 0; i < ASCIIMessage.length; ++i) {
-            BigInteger ASCIIChar = BigInteger.valueOf((long) (ASCIIMessage[i]));
-            encrypted_message[i] = (ASCIIChar.modPow(key.get_e(), key.get_n()))
-                    .intValue();
+        for (int i= 0; i < ASCIIMessage.length; ++i) {
+            BigInteger ASCIIChar= BigInteger.valueOf((long)(ASCIIMessage[i]));
+            encrypted_message[i]= (ASCIIChar.modPow(key.get_e(), key.get_n()) );
         }
 
         return encrypted_message;
@@ -47,15 +50,14 @@ public class RSAEncryptor implements Encryptor {
      * @return
      */
     @Override
-    public String decrypt(int[] cryptedMessage, PrivateKey key) {
+    public String decrypt(BigInteger[] cryptedMessage, PrivateKey key) {
         String decryptedMessage;
-        int[] decryptedBytes = new int[cryptedMessage.length];
+        byte[] decryptedBytes = new byte[cryptedMessage.length];
 
         for (int i = 0; i < cryptedMessage.length; i++) {
-            BigInteger charCrypted = BigInteger.valueOf(cryptedMessage[i]);
+            BigInteger charCrypted = cryptedMessage[i];
             BigInteger charDecrypted = charCrypted.modPow(key.getU(), key.getN());
-            logger.debug(cryptedMessage[i] + " " + charCrypted.toString() + " " + charDecrypted.toString());
-            decryptedBytes[i] = charDecrypted.intValue();
+            decryptedBytes[i] = charDecrypted.byteValue();
         }
 
         decryptedMessage = fromASCII(decryptedBytes);
@@ -81,6 +83,7 @@ public class RSAEncryptor implements Encryptor {
         }
         logger.info("message to ASCII : " + ascii_message);
 
+//        logger.info("Encrypted message : " + encrypted_message);
         return encrypted_message;
     }
 
@@ -88,12 +91,12 @@ public class RSAEncryptor implements Encryptor {
      * @param encryptedMessage
      * @return
      */
-    public String fromASCII(int[] encryptedMessage) {
+    public String fromASCII(byte[] encryptedMessage) {
         String decryptedMessage = "";
 
-        for (int charInt : encryptedMessage) {
-            decryptedMessage += (char) charInt;
-            logger.debug(charInt + " : " + (char) charInt);
+        for (byte charByte : encryptedMessage) {
+            logger.info("byte ASCII : "+ charByte);
+            decryptedMessage += (char) charByte;
         }
 
         return decryptedMessage;

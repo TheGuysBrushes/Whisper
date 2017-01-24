@@ -19,20 +19,18 @@ import java.util.Random;
 public class KeyGenerator {
     private final static Logger logger = Logger.getLogger(KeyGenerator.class);
 
-
-    private BigInteger e;
-    private BigInteger m;
     private BigInteger n;
+    private BigInteger m;
+    private BigInteger e;
     private BigInteger u;
+    
+    public boolean is_initiated= false;
+    public boolean private_initiated= false;
 
-    /**
-     * Generate a public key
-     *
-     * @return a generated public key
-     */
-    public PublicKey generatePublicKey() {
-        logger.info("Génération clés publiques");
+    public void initParameters() {
 
+        logger.info("Key generation parameters initialization");
+        
         Random rand = new Random();
 
         // p and q definition
@@ -52,20 +50,17 @@ public class KeyGenerator {
         while ((m.gcd(e)).compareTo(new BigInteger("1")) != 0) {
             e = e.nextProbablePrime();
         }
-
-        // Create the key from calculated values
-        PublicKey key = new PublicKey(n, e);
-
-        return key;
+        
+        // set flag to indicate values have been initiated
+        is_initiated= true;
     }
-
-    public PrivateKey generatePrivateKey() {
-        logger.info("Génération clés privées");
-        BigInteger r_prec = e;
+    
+    private void calculateU() {
+                BigInteger r_prec = e;
         BigInteger u_prec = new BigInteger("1");
         BigInteger v_prec = new BigInteger("0");
         BigInteger r = m;
-        BigInteger u = new BigInteger("0");
+        u = new BigInteger("0");
         BigInteger v = new BigInteger("1");
         BigInteger r_next;
         BigInteger u_next;
@@ -97,8 +92,44 @@ public class KeyGenerator {
             logger.debug("u = " + u_next);
             logger.debug("v = " + v_next + "\n");
         } while (r_next.compareTo(new BigInteger("0")) != 0);
+        
+        private_initiated= true;
+    }
+    
+    public void eraseParameters(){
+        is_initiated= false;
+        private_initiated= false;
+    }
+    
+    /**
+     * Generate a public key
+     *
+     * @return a generated public key
+     */
+    public PublicKey generatePublicKey() {
+        if (!is_initiated) {
+            initParameters();
+        }
+        logger.info("Public key generation");
+        
+        // Create the key from calculated values
+        PublicKey key = new PublicKey(n, e);
 
-        this.u = u;
+        return key;
+    }
+
+    public PrivateKey generatePrivateKey() {
+        
+        if (!is_initiated) {
+            initParameters();
+        }
+        
+        // U value calculation if needed
+        if (!private_initiated) {
+            calculateU();
+        }
+
+        logger.info("Private key generation");
 
         // Create the key from calculated values
         PrivateKey key = new PrivateKey(n, u);

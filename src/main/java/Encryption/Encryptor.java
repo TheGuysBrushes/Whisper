@@ -5,6 +5,8 @@
  */
 package Encryption;
 
+import java.math.BigInteger;
+
 /**
  * Describe all methods 
  * @author flodavid
@@ -17,7 +19,7 @@ public interface Encryptor {
      * @param key
      * @return 
      */
-    public int[] encrypt(String message, PublicKey key);
+    public BigInteger[] encrypt(String message, PublicKey key);
 
     /**
      * Decrypt a message with a given key
@@ -25,5 +27,5 @@ public interface Encryptor {
      * @param key
      * @return
      */
-    public String decrypt(int[] cryptedMessage, PrivateKey key);
+    public String decrypt(BigInteger[] cryptedMessage, PrivateKey key);
 }
