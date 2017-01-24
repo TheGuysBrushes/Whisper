@@ -109,10 +109,10 @@ public class Sandbox {
                 Socket sock;
                 sock = socket.accept();
                 ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(sock.getInputStream()));
-                PublicKey o = (PublicKey) is.readObject();
+                PrivateKey clientKey = (PrivateKey) is.readObject();
 
                 ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(sock.getOutputStream()));
-                os.writeObject(privateKey);
+                os.writeObject(publicKey);
                 os.flush();
 
                 while (true) {
@@ -121,7 +121,7 @@ public class Sandbox {
                     String messageCrypte = (String) is.readObject();
 
                     // décryptage du message recu
-                    String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
+                    String decryptedMSG = encryptor.decrypt(messageCrypte, clientKey);
                     logger.info("Message décrypté : " + decryptedMSG);
 
 
