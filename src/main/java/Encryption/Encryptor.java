@@ -13,11 +13,11 @@ public interface Encryptor {
 
     /**
      * Encrypt a message with a given key
-     * @param ASCIIMessage
+     * @param message
      * @param key
      * @return 
      */
-    public int[] encrypt(byte[] ASCIIMessage, PublicKey key);
+    public int[] encrypt(String message, PublicKey key);
 
     /**
      * Decrypt a message with a given key
