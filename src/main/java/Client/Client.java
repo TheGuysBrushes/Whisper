@@ -59,8 +59,11 @@ public class Client {
             inS = new ObjectInputStream(socket.getInputStream());
             serverPublicKey = (PublicKey) inS.readObject();
             
-            sendReceiveEncryptedMessage(message);
-            
+            sendReceiveEncryptedMessage("message 1");
+            sendReceiveEncryptedMessage("message 2");
+            sendReceiveEncryptedMessage("message 3");
+
+
 //            socket.close();
         } catch (SocketException e) {
             logger.debug("SocketException", e);
@@ -99,7 +102,7 @@ public class Client {
         Encryptor encryptor = new RSAEncryptor();
         
         // Envoi d'un message
-        String msg = "message";
+        String msg = message;
 
         String messageCrypted = encryptor.encryptToString(msg, serverPublicKey);
         try {

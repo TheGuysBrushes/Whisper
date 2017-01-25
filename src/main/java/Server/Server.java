@@ -1,9 +1,9 @@
 package Server;
 
 /**
- *
  * @author flodavid
  */
+
 import Encryption.KeyGenerator;
 import Encryption.PrivateKey;
 import Encryption.PublicKey;
@@ -51,34 +51,39 @@ public class Server {
             sock = socket.accept();
             ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(sock.getInputStream()));
             PublicKey clientKey = (PublicKey) is.readObject();
+            logger.info("Client's public key received.");
 
             ObjectOutputStream os = new ObjectOutputStream(sock.getOutputStream());
             os.writeObject(publicKey);
+            logger.info("Server's public key sent.");
             os.flush();
 
-            //while (true) {
+            while (true) {
 
                 //Reception
-                String messageCrypte = (String) is.readObject();
+                try {
+                    String messageCrypte = (String) is.readObject();
+                    // décryptage du message recu
+                    String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
+                    logger.info("Message décrypté : " + decryptedMSG);
 
-                // décryptage du message recu
-                String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
-                logger.info("Message décrypté : " + decryptedMSG);
+
+                    // préparation de la réponse
+                    String reponse = "Roger " + decryptedMSG;
+                    BigInteger[] encryptedHello = encryptor.encrypt(reponse, clientKey);
+                    String reponseCrypted = encryptedHello[0].toString();
+                    for (int i = 1; i < encryptedHello.length; i++) {
+                        reponseCrypted += "%" + encryptedHello[i];
+                    }
+                    logger.info("Réponse crypté: " + reponseCrypted);
 
 
-                // préparation de la réponse
-                String reponse = "Roger";
-                BigInteger[] encryptedHello = encryptor.encrypt(reponse, clientKey);
-                String reponseCrypted = encryptedHello[0].toString();
-                for (int i = 1; i < encryptedHello.length; i++) {
-                    reponseCrypted += "%" + encryptedHello[i];
+                    //Envoi de la réponse cryptée
+                    os.writeObject(reponseCrypted);
+                    os.flush();
                 }
-                logger.info("Réponse crypté: " + reponseCrypted);
 
-
-                //Envoi de la réponse cryptée
-                os.writeObject(reponseCrypted);
-           // }
+            }
         } catch (SocketException e) {
             logger.debug("SocketException", e);
         } catch (IOException e) {
