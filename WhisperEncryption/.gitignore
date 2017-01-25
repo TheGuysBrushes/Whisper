@@ -1,0 +1,19 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+Supprimerait .idea/
+Supprimerait Whisper.iml
+Supprimerait sources.iml
+Supprimerait src/main/resources/
+Supprimerait target/
+/target/
+Supprimerait src/main/java/Sandbox.java
