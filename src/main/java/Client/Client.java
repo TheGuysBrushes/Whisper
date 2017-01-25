@@ -1,34 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Client;
 
-/**
- *
- * @author flodavid
- */
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import Encryption.*;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.math.BigInteger;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import org.apache.log4j.Logger;
 
+/**
+ * Client that can connect to a server and send and receive messages
+ * @author flodavid
+ */
 public class Client {
     private final static Logger logger = Logger.getLogger(Client.class);
     
-    public PublicKey myPublicKey;
+    public PublicKey SharablePublicKey;
     private PrivateKey myPrivateKey;
     
     private PublicKey serverPublicKey;
@@ -36,35 +27,49 @@ public class Client {
     private ObjectInputStream inS;
     private ObjectOutputStream outS;
 
+    private Socket socket;
+
+    Encryptor encryptor;
+
+    public Client() {
+        encryptor = new RSAEncryptor();
+    }
+
+    /**
+     * Generate both public and private key
+     */
+    private void generateKeys() {
+        KeyGenerator generator= new KeyGenerator();
+
+        SharablePublicKey = generator.generatePublicKey();
+        logger.info("Clé publique : "+SharablePublicKey);
+
+        myPrivateKey = generator.generatePrivateKey();
+        logger.debug("Clé privée : "+ myPrivateKey);
+    }
+
     /**
      * Initialize connection with a distant or local server
      * @param address : IP address of the server
+     * @param s_port : port used for connection
      */
-    public void initConnection(String message, String address, String s_port) {
+    public void initConnection(String address, String s_port) throws IOException{
         
-        generateKeys(address);
-        
-        //Client
+        generateKeys();
 
         int port = Integer.parseInt(s_port);
-        RSAEncryptor encryptor = new RSAEncryptor();
-        try (Socket socket = new Socket(InetAddress.getByName(address), port)) {
 
+        socket = new Socket(InetAddress.getByName(address), port);
+        try {
             // Envoi clé
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            outS.writeObject(myPublicKey);
+            outS.writeObject(SharablePublicKey);
             outS.flush();
 
             // Reception clé
             inS = new ObjectInputStream(socket.getInputStream());
             serverPublicKey = (PublicKey) inS.readObject();
-            
-            sendReceiveEncryptedMessage("message 1");
-            sendReceiveEncryptedMessage("message 2");
-            sendReceiveEncryptedMessage("message 3");
 
-
-//            socket.close();
         } catch (SocketException e) {
             logger.debug("SocketException", e);
         } catch (UnknownHostException e) {
@@ -76,66 +81,70 @@ public class Client {
         }
     }
     
-    public void generateKeys(String address) {
-        KeyGenerator generator= new KeyGenerator();
-        
-        myPublicKey = generator.generatePublicKey();
-        logger.info("Clé publique : "+myPublicKey);
-
-        myPrivateKey = generator.generatePrivateKey();
-        logger.debug("Clé privée : "+ myPrivateKey);        
+    /**
+     * Ends the connection between
+     * @throws IOException
+     */
+    public void closeConnection() throws IOException{
+        socket.close();
     }
 
-    public String encryptMessage(String message) {
-        Encryptor encryptor = new RSAEncryptor();
-                
-        return encryptor.encryptToString(message, myPublicKey);
-    }
-    
-    public String decryptMessage(String encrypted_message) {
-        Encryptor encryptor = new RSAEncryptor();
-                
-        return encryptor.decrypt(encrypted_message, myPrivateKey);
-    }
-    
-    public void sendReceiveEncryptedMessage(String message) throws IOException {
-        Encryptor encryptor = new RSAEncryptor();
+    /**
+     * Encrypt and send a message to the server
+     * @param message : message to send
+     * @throws IOException
+     */
+    public void encryptSendMessage(String message) throws IOException {
+
+        if (serverPublicKey == null) {
+            logger.error("Je n'ai pas recu la clé public du serveur");
+            return;
+        }
         
         // Envoi d'un message
-        String msg = message;
+        String messageCrypted = encryptor.encryptToString(message, serverPublicKey);
 
-        String messageCrypted = encryptor.encryptToString(msg, serverPublicKey);
-        try {
-            outS.writeObject(messageCrypted);
-            outS.flush();
-
-            // Réception de la réponse
-            String reponse = (String) inS.readObject();
-            String decryptedReponse = encryptor.decrypt(reponse, myPrivateKey);
-            logger.info("Réponse : " + decryptedReponse);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        outS.writeObject(messageCrypted);
+        outS.flush();
     }
 
-    public void sendEncryptedMessage(String message) {
-        Encryptor encryptor = new RSAEncryptor();
-        
-        BigInteger[] encryptedHello = encryptor.encrypt(message, myPublicKey);   
-    }
-    
-    public String receiveEncryptedMessage(String address) {
-        
-        if (serverPublicKey == null) {
+    /**
+     * Receive and decrypt a message sent by the server
+     * @return the received message sent by the server
+     * @throws IOException
+     */
+    public String receiveDecryptMessage() throws IOException {
+
+        if (myPrivateKey == null) {
             logger.error("Je n'ai pas recu la clé public du serveur");
             return "";
         }
-        
-//        logger.info("Message décrypté  : "+ decryptedMSG);
 
-        return "";
+        try {
+            // Réception de la réponse
+            String response = (String) inS.readObject();
+            String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
+            logger.info("Réponse : " + decryptedReponse);
+
+            return decryptedReponse;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
-    
+
+    /**
+     * Encrypts and sends a message, then receive and decrypt a message form the server
+     * @param message : message to send
+     * @throws IOException
+     */
+    private void PingPong(String message) throws IOException {
+        encryptSendMessage(message);
+        String response= receiveDecryptMessage();
+
+        logger.info("Réponse reçue : " + response);
+    }
+
     /**
      * @param args : Parameters of the connection :
      *  "args[0]" is the address and "args[1]" the port
@@ -155,7 +164,7 @@ public class Client {
         } else {
             address = args[1];
         }
-//        address = "192.168.99.107";
+        address = "192.168.99.107";
         
         String s_port;
         if (args.length < 3) {
@@ -165,6 +174,18 @@ public class Client {
         }
 
         Client client = new Client();
-        client.initConnection(message, address, s_port);
+        try {
+            client.initConnection(address, s_port);
+
+            client.PingPong(message);
+            client.PingPong(message + " (1)");
+            client.PingPong(message + " (2)");
+            client.PingPong(message + " (3)");
+
+            client.closeConnection();
+        } catch (IOException e) {
+            logger.debug("IOException", e);
+        }
+
     }
 }
