@@ -31,7 +31,7 @@ public class Client {
     public PublicKey myPublicKey;
     private PrivateKey myPrivateKey;
     
-    private PrivateKey serverPublicKey;
+    private PublicKey serverPublicKey;
     
     private ObjectInputStream inS;
     private ObjectOutputStream outS;
@@ -51,14 +51,13 @@ public class Client {
         try (Socket socket = new Socket(InetAddress.getByName(address), port)) {
 
             // Envoi clé
-            ObjectOutputStream outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             outS.writeObject(myPublicKey);
             outS.flush();
 
             // Reception clé
-            BufferedInputStream bufferedStream = new BufferedInputStream(socket.getInputStream());
-            ObjectInputStream is = new ObjectInputStream(bufferedStream);
-            serverPublicKey = (PrivateKey) is.readObject();
+            inS = new ObjectInputStream(socket.getInputStream());
+            serverPublicKey = (PublicKey) inS.readObject();
             
             sendReceiveEncryptedMessage(message);
             
@@ -93,7 +92,7 @@ public class Client {
     public String decryptMessage(String encrypted_message) {
         Encryptor encryptor = new RSAEncryptor();
                 
-        return encryptor.decrypt(encrypted_message, serverPublicKey);
+        return encryptor.decrypt(encrypted_message, myPrivateKey);
     }
     
     public void sendReceiveEncryptedMessage(String message) throws IOException {
@@ -102,14 +101,14 @@ public class Client {
         // Envoi d'un message
         String msg = "message";
 
-        String messageCrypted = encryptor.encryptToString(msg, myPublicKey);        
+        String messageCrypted = encryptor.encryptToString(msg, serverPublicKey);
         try {
             outS.writeObject(messageCrypted);
             outS.flush();
 
             // Réception de la réponse
             String reponse = (String) inS.readObject();
-            String decryptedReponse = encryptor.decrypt(reponse, serverPublicKey);
+            String decryptedReponse = encryptor.decrypt(reponse, myPrivateKey);
             logger.info("Réponse : " + decryptedReponse);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

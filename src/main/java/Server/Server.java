@@ -1,57 +1,89 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Server;
 
 /**
  *
  * @author flodavid
  */
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import Encryption.KeyGenerator;
+import Encryption.PrivateKey;
+import Encryption.PublicKey;
+import Encryption.RSAEncryptor;
+import org.apache.log4j.Logger;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.math.BigInteger;
+import java.net.*;
 
 public class Server {
+    private final static Logger logger = Logger.getLogger(Server.class);
 
     public static void main(String[] args) {
+        //testASCII();
 
-        String arg;
+        String s_port;
         if (args.length < 1) {
-            arg = "2008";
+            s_port = "2000";
         } else {
-            arg = args[0];
+            s_port = args[0];
         }
-        //Serveur
-        try {
-            int port = Integer.parseInt(arg);
-            DatagramSocket socket = new DatagramSocket(port);
-            boolean continuer = true;
-            while (continuer) {
+
+        // créer serveur
+        int port = Integer.parseInt(s_port);
+        boolean continuer = true;
+
+        KeyGenerator generator = new KeyGenerator();
+        generator.initParameters();
+        PublicKey publicKey = generator.generatePublicKey();
+        logger.info("Clé publique : " + publicKey);
+
+        PrivateKey privateKey = generator.generatePrivateKey();
+        logger.info("Clé privée : " + privateKey);
+        RSAEncryptor encryptor = new RSAEncryptor();
+
+
+        try (ServerSocket socket = new ServerSocket(port)) {
+
+            // Echange de clé
+            Socket sock;
+            sock = socket.accept();
+            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(sock.getInputStream()));
+            PublicKey clientKey = (PublicKey) is.readObject();
+
+            ObjectOutputStream os = new ObjectOutputStream(sock.getOutputStream());
+            os.writeObject(publicKey);
+            os.flush();
+
+            //while (true) {
+
                 //Reception
-                byte[] inBuf = new byte[1024];
-                DatagramPacket packet = new DatagramPacket(inBuf, inBuf.length);
+                String messageCrypte = (String) is.readObject();
 
-                socket.receive(packet);
-                String s = new String(packet.getData(), 0, packet.getLength());
+                // décryptage du message recu
+                String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
+                logger.info("Message décrypté : " + decryptedMSG);
 
-                if (s.equals("fin")) {
-                    continuer = false;
-                } else {
-                    System.out.println(s);
 
-                    //Envoi
-                    String ok = new String(s + "_ok");
-                    byte[] buf = ok.getBytes();
-                    //DatagramSocket socketSend= new DatagramSocket(Integer.parseInt(args[0]));
-                    DatagramPacket packetSend = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());
-
-                    socket.send(packetSend);
+                // préparation de la réponse
+                String reponse = "Roger";
+                BigInteger[] encryptedHello = encryptor.encrypt(reponse, clientKey);
+                String reponseCrypted = encryptedHello[0].toString();
+                for (int i = 1; i < encryptedHello.length; i++) {
+                    reponseCrypted += "%" + encryptedHello[i];
                 }
-            }
-            socket.close();
-        } catch (Exception e) {
-            System.err.println("impossible de creer : " + e.getMessage());
+                logger.info("Réponse crypté: " + reponseCrypted);
+
+
+                //Envoi de la réponse cryptée
+                os.writeObject(reponseCrypted);
+           // }
+        } catch (SocketException e) {
+            logger.debug("SocketException", e);
+        } catch (IOException e) {
+            logger.debug("IOException", e);
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
