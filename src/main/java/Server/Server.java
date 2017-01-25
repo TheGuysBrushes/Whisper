@@ -61,27 +61,27 @@ public class Server {
             while (true) {
 
                 //Reception
-                try {
-                    String messageCrypte = (String) is.readObject();
-                    // décryptage du message recu
-                    String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
-                    logger.info("Message décrypté : " + decryptedMSG);
+
+                String messageCrypte = (String) is.readObject();
+                // décryptage du message recu
+                String decryptedMSG = encryptor.decrypt(messageCrypte, privateKey);
+                logger.info("Message décrypté : " + decryptedMSG);
 
 
-                    // préparation de la réponse
-                    String reponse = "Roger " + decryptedMSG;
-                    BigInteger[] encryptedHello = encryptor.encrypt(reponse, clientKey);
-                    String reponseCrypted = encryptedHello[0].toString();
-                    for (int i = 1; i < encryptedHello.length; i++) {
-                        reponseCrypted += "%" + encryptedHello[i];
-                    }
-                    logger.info("Réponse crypté: " + reponseCrypted);
-
-
-                    //Envoi de la réponse cryptée
-                    os.writeObject(reponseCrypted);
-                    os.flush();
+                // préparation de la réponse
+                String reponse = "Roger " + decryptedMSG;
+                BigInteger[] encryptedHello = encryptor.encrypt(reponse, clientKey);
+                String reponseCrypted = encryptedHello[0].toString();
+                for (int i = 1; i < encryptedHello.length; i++) {
+                    reponseCrypted += "%" + encryptedHello[i];
                 }
+                logger.info("Réponse crypté: " + reponseCrypted);
+
+
+                //Envoi de la réponse cryptée
+                os.writeObject(reponseCrypted);
+                os.flush();
+
 
             }
         } catch (SocketException e) {
