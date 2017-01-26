@@ -164,8 +164,9 @@ public class Client {
         } else {
             address = args[1];
         }
-        address = "192.168.99.107";
-        
+        //address = "192.168.99.107";
+
+
         String s_port;
         if (args.length < 3) {
             s_port = "2000";
