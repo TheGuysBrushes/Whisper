@@ -8,4 +8,4 @@
 [@flodavid](https://flodavid.github.io) |[@flo5324](https://github.com/flo5324)
 
   
-Projet développé par [Florentin Noël](https://github.com/flo5324) et [Florian David](https://github.com/flodavid)
+Projet développé par [Florian David](https://github.com/flodavid) et [Florentin Noël](https://github.com/flo5324)
