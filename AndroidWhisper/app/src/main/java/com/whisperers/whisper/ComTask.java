@@ -19,39 +19,51 @@ import Encryption.PublicKey;
 import Encryption.RSAEncryptor;
 
 /**
- * Created by etudiant on 26/01/17.
+ * @author Florentin NOEL et Florian DAVID
  */
 
-public class ComTask extends AsyncTask<String, Void, Void> {
+class ComTask extends AsyncTask<String, Void, Void> {
     private static String TAG = "WHISPER";
 
-    public PublicKey SharablePublicKey;
+    /*** Encryption ***/
+    private PublicKey sharablePublicKey;
     private PrivateKey myPrivateKey;
 
     private PublicKey serverPublicKey;
 
+    private Encryptor encryptor;
+
+    /*** Réseau ***/
     private ObjectInputStream inS;
     private ObjectOutputStream outS;
 
     private Socket socket;
 
-    Encryptor encryptor;
-
-    String message = "hello";
     String address = "192.168.43.78";
 //        address = "localhost";
-
-
     String s_port = "2000";
 
+    String default_message = "hello";
+
+    public ComTask() {
+        encryptor = new RSAEncryptor();
+    }
+
+    /**
+     * Generate both public and private key
+     */
     private void generateKeys() {
         KeyGenerator generator = new KeyGenerator();
 
-        SharablePublicKey = generator.generatePublicKey();
+        sharablePublicKey = generator.generatePublicKey();
 
         myPrivateKey = generator.generatePrivateKey();
     }
 
+    /**
+     * Ends the connection between
+     * @throws IOException
+     */
     public void initConnection(String address, String s_port) throws IOException {
 
         generateKeys();
@@ -62,24 +74,24 @@ public class ComTask extends AsyncTask<String, Void, Void> {
         try {
             // Envoi clé
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            outS.writeObject(SharablePublicKey);
+            outS.writeObject(sharablePublicKey);
             outS.flush();
 
             // Reception clé
             inS = new ObjectInputStream(socket.getInputStream());
             serverPublicKey = (PublicKey) inS.readObject();
-
-        } catch (SocketException e) {
-            Log.w(TAG,e);
-        } catch (UnknownHostException e) {
-            Log.w(TAG,e);
-        } catch (IOException e) {
-            Log.w(TAG,e);
-        } catch (ClassNotFoundException e) {
+        } catch (SocketException | UnknownHostException e) {
+            Log.w(TAG, "Exception de socket ou d'hote " + e);
+        } catch (IOException | ClassNotFoundException e) {
             Log.w(TAG,e);
         }
     }
 
+    /**
+     * Encrypt and send a default_message to the server
+     * @param message : default_message to send
+     * @throws IOException
+     */
     public void encryptSendMessage(String message) throws IOException {
 
         if (serverPublicKey == null) {
@@ -87,7 +99,7 @@ public class ComTask extends AsyncTask<String, Void, Void> {
             return;
         }
 
-        // Envoi d'un message
+        // Envoi d'un default_message
         String messageCrypted = encryptor.encryptToString(message, serverPublicKey);
 
         outS.writeObject(messageCrypted);
@@ -95,9 +107,9 @@ public class ComTask extends AsyncTask<String, Void, Void> {
     }
 
     /**
-     * Receive and decrypt a message sent by the server
+     * Receive and decrypt a default_message sent by the server
      *
-     * @return the received message sent by the server
+     * @return the received default_message sent by the server
      * @throws IOException
      */
     public String receiveDecryptMessage() throws IOException {
@@ -120,17 +132,23 @@ public class ComTask extends AsyncTask<String, Void, Void> {
         }
     }
 
+    /**
+     * Encrypts and sends a default_message, then receive and decrypt a default_message form the server
+     * @param message : default_message to send
+     * @throws IOException
+     */
     private void PingPong(String message) throws IOException {
         encryptSendMessage(message);
         String response = receiveDecryptMessage();
         Log.i("PINGPONG", "PingPong: " + response);
     }
 
-    public void closeConnection() throws IOException{
+    /**
+     * Ends the connection between
+     * @throws IOException
+     */
+    public void closeConnection() throws IOException {
         socket.close();
-    }
-    public ComTask() {
-        encryptor = new RSAEncryptor();
     }
 
     @Override
@@ -138,15 +156,23 @@ public class ComTask extends AsyncTask<String, Void, Void> {
         try {
             initConnection(address, s_port);
 
-            PingPong(message);
-            PingPong(message + " (1)");
-            PingPong(message + " (2)");
-            PingPong(message + " (3)");
+            PingPong(default_message);
+            PingPong(default_message + " (1)");
+            PingPong(default_message + " (2)");
+            PingPong(default_message + " (3)");
 
             closeConnection();
         } catch (IOException e) {
             Log.w(TAG,e);
         }
         return null;
+    }
+
+    /**
+     * Getter on the public key to share
+     * @return sharable public key
+     */
+    public PublicKey getSharablePublicKey() {
+        return sharablePublicKey;
     }
 }
