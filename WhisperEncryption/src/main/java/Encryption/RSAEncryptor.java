@@ -5,7 +5,7 @@
  */
 package Encryption;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 
@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * @author flodavid
  */
 public class RSAEncryptor implements Encryptor {
-    private final static Logger logger = Logger.getLogger(RSAEncryptor.class);
+//    private final static Logger logger = Logger.getLogger(RSAEncryptor.class);
 
 //    private BigInteger r, u, v, n;
 
@@ -41,7 +41,7 @@ public class RSAEncryptor implements Encryptor {
             encrypted_msg+= encrypted_message[i].toString() + ";";
         }
         
-        logger.info("Message encrypté : "+ encrypted_msg);
+//        logger.info("Message encrypté : "+ encrypted_msg);
 
         return encrypted_message;
     }
@@ -82,7 +82,7 @@ public class RSAEncryptor implements Encryptor {
         for (int i = 0; i < cryptedMessage.length; i++) {
             BigInteger charCrypted = cryptedMessage[i];
             BigInteger charDecrypted = charCrypted.modPow(key.getU(), key.getN());
-            logger.debug(charCrypted + " decrypted to "+charDecrypted);
+//            logger.debug(charCrypted + " decrypted to "+charDecrypted);
             decryptedBytes[i] = charDecrypted.byteValue();
         }
 
@@ -126,7 +126,7 @@ public class RSAEncryptor implements Encryptor {
         for (int i = 1; i < message.length(); ++i) {
             ascii_message += "; " + encrypted_message[i];
         }
-        logger.debug("message to ASCII : " + ascii_message);
+//        logger.debug("message to ASCII : " + ascii_message);
 
 //        logger.info("Encrypted message : " + encrypted_message);
         return encrypted_message;
@@ -140,7 +140,7 @@ public class RSAEncryptor implements Encryptor {
         String decryptedMessage = "";
 
         for (byte charByte : encryptedMessage) {
-            logger.debug("byte ASCII : "+ charByte);
+//            logger.debug("byte ASCII : "+ charByte);
             decryptedMessage += (char) charByte;
         }
 

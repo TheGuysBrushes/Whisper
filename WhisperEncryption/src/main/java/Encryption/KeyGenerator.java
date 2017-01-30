@@ -5,7 +5,7 @@
  */
 package Encryption;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.Random;
  * @author flodavid
  */
 public class KeyGenerator {
-    private final static Logger logger = Logger.getLogger(KeyGenerator.class);
+   // private final static Logger logger = Logger.getLogger(KeyGenerator.class);
 
     private BigInteger n;
     private BigInteger m;
@@ -29,13 +29,13 @@ public class KeyGenerator {
 
     public void initParameters() {
 
-        logger.info("Key generation parameters initialization");
+//        logger.info("Key generation parameters initialization");
 
         Random rand = new Random();
 
         // p and q definition
-        BigInteger p = BigInteger.probablePrime(100, rand);
-        BigInteger q = BigInteger.probablePrime(100, rand);
+        BigInteger p = BigInteger.probablePrime(256, rand);
+        BigInteger q = BigInteger.probablePrime(256, rand);
 
         // n definition
         n = p.multiply(q);
@@ -82,10 +82,10 @@ public class KeyGenerator {
 
         BigInteger res = e.gcd(m);
 
-        logger.debug("Lancement avec paramètres : ");
-        logger.debug("r_prec = " + r_prec + "\tr = " + r);
-        logger.debug("u_prec = " + u_prec + "\tu = " + u);
-        logger.debug("v_prec = " + v_prec + "\tv = " + v + "\n");
+//        logger.debug("Lancement avec paramètres : ");
+//        logger.debug("r_prec = " + r_prec + "\tr = " + r);
+//        logger.debug("u_prec = " + u_prec + "\tu = " + u);
+//        logger.debug("v_prec = " + v_prec + "\tv = " + v + "\n");
 
         do {
             r_next = r_prec.subtract((r_prec.divide(r)).multiply(r));
@@ -100,13 +100,13 @@ public class KeyGenerator {
             v = v_next;
 
             if (u_next.compareTo(new BigInteger("0")) == -1) {
-                logger.debug("Valeur de u négative (u = " + u_next + ")");
+//                logger.debug("Valeur de u négative (u = " + u_next + ")");
                 u_next = solveNegativeValue(u_next);
             }
 
-            logger.debug("r = " + r_next);
-            logger.debug("u = " + u_next);
-            logger.debug("v = " + v_next + "\n");
+//            logger.debug("r = " + r_next);
+//            logger.debug("u = " + u_next);
+//            logger.debug("v = " + v_next + "\n");
         } while (r_next.compareTo(res) != 0);
 
         private_initiated = true;
@@ -126,7 +126,7 @@ public class KeyGenerator {
         if (!is_initiated) {
             initParameters();
         }
-        logger.info("Public key generation");
+//        logger.info("Public key generation");
 
         // Create the key from calculated values
         PublicKey key = new PublicKey(n, e);
@@ -145,7 +145,7 @@ public class KeyGenerator {
             calculateU();
         }
 
-        logger.info("Private key generation");
+//        logger.info("Private key generation");
 
         // Create the key from calculated values
         PrivateKey key = new PrivateKey(n, u);

@@ -32,7 +32,6 @@ public class Server {
 
         // créer serveur
         int port = Integer.parseInt(s_port);
-        boolean continuer = true;
 
         KeyGenerator generator = new KeyGenerator();
         generator.initParameters();
