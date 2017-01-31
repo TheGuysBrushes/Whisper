@@ -12,24 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/sendMsgLayout"
+        android:layout_alignParentTop="true"
         android:overScrollMode="always"
-        android:stackFromBottom="true"
-        android:layout_alignParentTop="true" >
-    </ListView>
+        android:stackFromBottom="true"></ListView>
 
     <RelativeLayout
         android:id="@+id/sendMsgLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-        />
+            android:background="@android:color/darker_gray" />
 
         <EditText
             android:id="@+id/messageText"
@@ -38,7 +36,8 @@
             android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@+id/imageSend"
             android:hint="Chuchoter"
-            android:maxLines="3" >
+            android:maxLines="3">
+
             <requestFocus />
         </EditText>
 

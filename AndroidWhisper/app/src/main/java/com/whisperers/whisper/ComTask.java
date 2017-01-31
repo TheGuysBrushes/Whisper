@@ -25,7 +25,9 @@ import Encryption.RSAEncryptor;
 class ComTask extends AsyncTask<String, Void, Void> {
     private static String TAG = "WHISPER";
 
-    /*** Encryption ***/
+    /***
+     * Encryption
+     ***/
     private PublicKey sharablePublicKey;
     private PrivateKey myPrivateKey;
 
@@ -33,14 +35,16 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
     private Encryptor encryptor;
 
-    /*** Réseau ***/
+    /***
+     * Réseau
+     ***/
     private ObjectInputStream inS;
     private ObjectOutputStream outS;
 
     private Socket socket;
 
     String address = "192.168.43.78";
-//        address = "localhost";
+    //        address = "localhost";
     String s_port = "2000";
 
     String default_message = "hello";
@@ -62,6 +66,7 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
     /**
      * Ends the connection between
+     *
      * @throws IOException
      */
     public void initConnection(String address, String s_port) throws IOException {
@@ -83,19 +88,20 @@ class ComTask extends AsyncTask<String, Void, Void> {
         } catch (SocketException | UnknownHostException e) {
             Log.w(TAG, "Exception de socket ou d'hote " + e);
         } catch (IOException | ClassNotFoundException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
     }
 
     /**
      * Encrypt and send a default_message to the server
+     *
      * @param message : default_message to send
      * @throws IOException
      */
     public void encryptSendMessage(String message) throws IOException {
 
         if (serverPublicKey == null) {
-            Log.i("","Je n'ai pas recu la clé public du serveur");
+            Log.i("", "Je n'ai pas recu la clé public du serveur");
             return;
         }
 
@@ -115,7 +121,7 @@ class ComTask extends AsyncTask<String, Void, Void> {
     public String receiveDecryptMessage() throws IOException {
 
         if (myPrivateKey == null) {
-            Log.i("","Je n'ai pas recu la clé public du serveur");
+            Log.i("", "Je n'ai pas recu la clé public du serveur");
             return "";
         }
 
@@ -123,17 +129,18 @@ class ComTask extends AsyncTask<String, Void, Void> {
             // Réception de la réponse
             String response = (String) inS.readObject();
             String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
-            Log.i("","Réponse : " + decryptedReponse);
+            Log.i("", "Réponse : " + decryptedReponse);
 
             return decryptedReponse;
         } catch (ClassNotFoundException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
             return "";
         }
     }
 
     /**
      * Encrypts and sends a default_message, then receive and decrypt a default_message form the server
+     *
      * @param message : default_message to send
      * @throws IOException
      */
@@ -145,6 +152,7 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
     /**
      * Ends the connection between
+     *
      * @throws IOException
      */
     public void closeConnection() throws IOException {
@@ -163,13 +171,14 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
             closeConnection();
         } catch (IOException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
         return null;
     }
 
     /**
      * Getter on the public key to share
+     *
      * @return sharable public key
      */
     public PublicKey getSharablePublicKey() {
