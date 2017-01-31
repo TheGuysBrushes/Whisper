@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author Work
+ * @author Florian DAVID
  */
 public class MessageReceptor implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(MessageReceptor.class);
@@ -49,7 +49,7 @@ public class MessageReceptor implements Runnable {
 
             return response;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("Exception : "+ e);
             return "";
         }
     }
@@ -65,8 +65,7 @@ public class MessageReceptor implements Runnable {
                 message= receiveMessage();
                 System.out.println("SENDER_NAME : " + message);
             } catch (IOException e) {
-                LOGGER.error("Exception : "+ e.getMessage());
-                e.printStackTrace();
+                LOGGER.error("Exception : "+ e);
             }
         } while (! message.equals("quit"));
     }

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author Work
+ * @author Florian DAVID
  */
 public class MessageDecryptorReceptor extends MessageReceptor {
     private final static Logger LOGGER = Logger.getLogger(MessageDecryptorReceptor.class);

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author Work
+ * @author Florian DAVID
  */
 public class MessageSender implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(MessageSender.class);
@@ -29,11 +29,11 @@ public class MessageSender implements Runnable {
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
         } catch (SocketException e) {
-            LOGGER.debug("SocketException", e);
+            LOGGER.error("SocketException", e);
         } catch (UnknownHostException e) {
-            LOGGER.debug("UnknownHostException", e);
+            LOGGER.error("UnknownHostException", e);
         } catch (IOException e) {
-            LOGGER.debug("IOException", e);
+            LOGGER.error("IOException", e);
         }
     }
     
@@ -48,7 +48,7 @@ public class MessageSender implements Runnable {
     }
         
     /**
-     * @param args
+     * Override of the run method
      */
     @Override
     public void run() {
@@ -64,8 +64,7 @@ public class MessageSender implements Runnable {
 //                System.out.println("Me : " + message);
                 sendMessage(message);
             } catch (IOException e) {
-                LOGGER.error("Exception : "+ e.getMessage());
-                e.printStackTrace();
+                LOGGER.error("Exception : "+ e);
             }
         } while (! message.equals("quit"));
     }
