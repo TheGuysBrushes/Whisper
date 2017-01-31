@@ -1,15 +1,19 @@
 package Client;
 
-import java.net.InetAddress;
-
 import Encryption.*;
+import MessageExchange.MessageDecryptorReceptor;
+import MessageExchange.MessageEncryptorSender;
+
+import java.net.InetAddress;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -17,9 +21,9 @@ import org.apache.log4j.Logger;
  * @author flodavid
  */
 public class Client {
-    private final static Logger logger = Logger.getLogger(Client.class);
+    private final static Logger LOGGER = Logger.getLogger(Client.class);
     
-    public PublicKey SharablePublicKey;
+    public PublicKey sharablePublicKey;
     private PrivateKey myPrivateKey;
     
     private PublicKey serverPublicKey;
@@ -41,19 +45,68 @@ public class Client {
     private void generateKeys() {
         KeyGenerator generator= new KeyGenerator();
 
-        SharablePublicKey = generator.generatePublicKey();
-        logger.info("Clé publique : "+SharablePublicKey);
+        sharablePublicKey = generator.generatePublicKey();
+        LOGGER.info("Clé publique : "+sharablePublicKey);
 
         myPrivateKey = generator.generatePrivateKey();
-        logger.debug("Clé privée : "+ myPrivateKey);
+        LOGGER.debug("Clé privée : "+ myPrivateKey);
+    }
+    
+    /**
+     * Receive key from other client
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
+    private void receiveKey() throws IOException, ClassNotFoundException {
+        inS = new ObjectInputStream(socket.getInputStream());
+        serverPublicKey = (PublicKey) inS.readObject();
+    }
+    
+    /**
+     * Send sharable key
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
+    private void sendKey() throws IOException, ClassNotFoundException {
+        outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        outS.writeObject(sharablePublicKey);
+        outS.flush();
+    }
+
+    /**
+     * Initialize connection waiting for connection from another client
+     * @param s_port : Port of connection
+     * @throws IOException
+     */
+    public void initConnection(String s_port) throws IOException {
+        
+        generateKeys();
+        
+        int port = Integer.parseInt(s_port);
+        
+        ServerSocket serverSocket = new ServerSocket(port);
+        
+        socket= serverSocket.accept();
+        
+        try {
+            receiveKey();
+            sendKey();
+        } catch (SocketException | UnknownHostException e) {
+            LOGGER.debug("SocketException", e);
+        } catch (IOException e) {
+            LOGGER.debug("IOException", e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Initialize connection with a distant or local server
      * @param address : IP address of the server
      * @param s_port : port used for connection
+     * @throws IOException
      */
-    public void initConnection(String address, String s_port) throws IOException{
+    public void initConnection(String address, String s_port) throws IOException {
         
         generateKeys();
 
@@ -61,21 +114,12 @@ public class Client {
 
         socket = new Socket(InetAddress.getByName(address), port);
         try {
-            // Envoi clé
-            outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            outS.writeObject(SharablePublicKey);
-            outS.flush();
-
-            // Reception clé
-            inS = new ObjectInputStream(socket.getInputStream());
-            serverPublicKey = (PublicKey) inS.readObject();
-
-        } catch (SocketException e) {
-            logger.debug("SocketException", e);
-        } catch (UnknownHostException e) {
-            logger.debug("UnknownHostException", e);
+            sendKey();
+            receiveKey();
+        } catch (SocketException | UnknownHostException e) {
+            LOGGER.debug("SocketException", e);
         } catch (IOException e) {
-            logger.debug("IOException", e);
+            LOGGER.debug("IOException", e);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -97,7 +141,7 @@ public class Client {
     public void encryptSendMessage(String message) throws IOException {
 
         if (serverPublicKey == null) {
-            logger.error("Je n'ai pas recu la clé public du serveur");
+            LOGGER.error("Je n'ai pas recu la clé public du serveur");
             return;
         }
         
@@ -116,7 +160,7 @@ public class Client {
     public String receiveDecryptMessage() throws IOException {
 
         if (myPrivateKey == null) {
-            logger.error("Je n'ai pas recu la clé public du serveur");
+            LOGGER.error("Je n'ai pas recu la clé public du serveur");
             return "";
         }
 
@@ -124,13 +168,39 @@ public class Client {
             // Réception de la réponse
             String response = (String) inS.readObject();
             String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
-            logger.info("Réponse : " + decryptedReponse);
+            LOGGER.info("Réponse : " + decryptedReponse);
 
             return decryptedReponse;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return "";
         }
+    }
+    
+    public void startReceiving() {
+
+    }
+    
+    public void startChat() {
+        
+            // Lancement du Thread d'envoi de messages
+            MessageEncryptorSender senderRunnable= new MessageEncryptorSender(serverPublicKey);
+            senderRunnable.initConnection(socket);
+            Thread msg_sender= new Thread(senderRunnable);
+            msg_sender.start();
+
+            // Lancement du Thread de réception de messages
+            MessageDecryptorReceptor receptorRunnable= new MessageDecryptorReceptor(myPrivateKey);
+            receptorRunnable.initConnection(socket);
+            Thread msg_receptor= new Thread(receptorRunnable);
+            msg_receptor.start();
+        
+            try {
+                msg_sender.join();
+                msg_receptor.join();
+            } catch (InterruptedException e) {
+                LOGGER.error("InterruptedException", e);
+            }
     }
 
     /**
@@ -142,7 +212,7 @@ public class Client {
         encryptSendMessage(message);
         String response= receiveDecryptMessage();
 
-        logger.info("Réponse reçue : " + response);
+        LOGGER.info("Réponse reçue : " + response);
     }
 
     /**
@@ -175,18 +245,13 @@ public class Client {
         }
 
         Client client = new Client();
+
         try {
             client.initConnection(address, s_port);
-
-            client.PingPong(message);
-            client.PingPong(message + " (1)");
-            client.PingPong(message + " (2)");
-            client.PingPong(message + " (3)");
-
+            client.startChat();
             client.closeConnection();
         } catch (IOException e) {
-            logger.debug("IOException", e);
+            LOGGER.error("IOException", e);
         }
-
     }
 }
