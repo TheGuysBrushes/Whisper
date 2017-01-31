@@ -169,7 +169,7 @@ class ComTask extends AsyncTask<Whisper, Void, Whisper> {
             encryptSendMessage(whispers[0].getContent());
             Whisper response = new Whisper(receiveDecryptMessage(),false);
 
-            closeConnection();
+            //closeConnection();
             return response;
         } catch (IOException e) {
             Log.w(TAG, e);

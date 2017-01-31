@@ -78,13 +78,13 @@ public class Server {
             
             // Lancement du Thread de réception de messages
             MessageDecryptorReceptor receptorRunnable= new MessageDecryptorReceptor(server.myPrivateKey);
-            receptorRunnable.initConnection(sock);
+           // receptorRunnable.initConnection(sock);
             Thread msg_receptor= new Thread(receptorRunnable);
             msg_receptor.start();
                         
             // Lancement du Thread d'envoi de messages
             MessageEncryptorSender senderRunnable= new MessageEncryptorSender(server.clientPublicKey);
-            senderRunnable.initConnection(sock);
+            //senderRunnable.initConnection(sock);
             Thread msg_sender= new Thread(senderRunnable);
             msg_sender.start();
 

@@ -5,13 +5,14 @@
  */
 package MessageExchange;
 
+import org.apache.log4j.Logger;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -22,18 +23,18 @@ public class MessageReceptor implements Runnable {
     
     private ObjectInputStream inS;
     
-    public void initConnection(Socket socket) {
-        
+    public void initConnection(Socket socket, ObjectInputStream objectInputStream) {
+        inS = objectInputStream;
         // Création du stream d'entrée
-        try {
-            inS = new ObjectInputStream(socket.getInputStream());
+        /*try {
+            inS = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         } catch (SocketException e) {
             LOGGER.debug("SocketException", e);
         } catch (UnknownHostException e) {
             LOGGER.debug("UnknownHostException", e);
         } catch (IOException e) {
             LOGGER.debug("IOException", e);
-        }
+        }*/
     }
     
     /**

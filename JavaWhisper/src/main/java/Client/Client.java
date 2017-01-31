@@ -91,6 +91,7 @@ public class Client {
         try {
             receiveKey();
             sendKey();
+            LOGGER.info("Key exchanged");
         } catch (SocketException | UnknownHostException e) {
             LOGGER.debug("SocketException", e);
         } catch (IOException e) {
@@ -177,21 +178,17 @@ public class Client {
         }
     }
     
-    public void startReceiving() {
-
-    }
-    
     public void startChat() {
         
             // Lancement du Thread d'envoi de messages
             MessageEncryptorSender senderRunnable= new MessageEncryptorSender(serverPublicKey);
-            senderRunnable.initConnection(socket);
+            senderRunnable.initConnection(socket,outS);
             Thread msg_sender= new Thread(senderRunnable);
             msg_sender.start();
 
             // Lancement du Thread de réception de messages
             MessageDecryptorReceptor receptorRunnable= new MessageDecryptorReceptor(myPrivateKey);
-            receptorRunnable.initConnection(socket);
+            receptorRunnable.initConnection(socket,inS);
             Thread msg_receptor= new Thread(receptorRunnable);
             msg_receptor.start();
         

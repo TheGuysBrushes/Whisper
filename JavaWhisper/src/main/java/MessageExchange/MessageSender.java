@@ -22,19 +22,19 @@ public class MessageSender implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(MessageSender.class);
     private ObjectOutputStream outS;
     
-    public void initConnection(Socket socket) {
+    public void initConnection(Socket socket, ObjectOutputStream outputStream) {
+        outS = outputStream;
 
         // Création du stream de sortie
-        try {
+        /*try {
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-
         } catch (SocketException e) {
             LOGGER.debug("SocketException", e);
         } catch (UnknownHostException e) {
             LOGGER.debug("UnknownHostException", e);
         } catch (IOException e) {
             LOGGER.debug("IOException", e);
-        }
+        }*/
     }
     
     /**
