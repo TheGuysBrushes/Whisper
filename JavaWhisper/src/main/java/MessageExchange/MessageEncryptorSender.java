@@ -8,8 +8,11 @@ package MessageExchange;
 import Encryption.Encryptor;
 import Encryption.PublicKey;
 import Encryption.RSAEncryptor;
+import java.io.BufferedOutputStream;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,13 +22,15 @@ import org.apache.log4j.Logger;
 public class MessageEncryptorSender extends MessageSender {
     private final static Logger LOGGER = Logger.getLogger(MessageEncryptorSender.class);
    
-    final private PublicKey serverPublicKey;
     final private Encryptor encryptor;
+    private PublicKey otherPublicKey;
 
-    
-    public MessageEncryptorSender(PublicKey publicKey) {
-        serverPublicKey= publicKey;
+    public MessageEncryptorSender() {
         encryptor = new RSAEncryptor();
+    }
+    
+    public void setPublicKey(PublicKey publicKey) {
+        otherPublicKey= publicKey;
     }
     
     /**
@@ -36,14 +41,26 @@ public class MessageEncryptorSender extends MessageSender {
     @Override
     public void sendMessage(String message) throws IOException {
 
-        if (serverPublicKey == null) {
+        if (otherPublicKey == null) {
             LOGGER.error("Je n'ai pas recu la clé public du serveur");
             return;
         }
         
         // Envoi d'un message
-        String messageCrypted = encryptor.encryptToString(message, serverPublicKey);
+        String messageCrypted = encryptor.encryptToString(message, otherPublicKey);
         super.sendMessage(messageCrypted);
+    }
+    
+    /**
+     * Send a public key to another client
+     * @param publicKey : sharable public key to send
+     * @param socket : Socket on which the key will be send
+     * @throws IOException
+     */
+    public void sendKey(PublicKey publicKey, Socket socket) throws IOException {
+        super.initConnection(socket);
+        getOutS().writeObject(publicKey);
+        getOutS().flush();
     }
     
 }

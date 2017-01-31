@@ -18,15 +18,18 @@ import java.net.UnknownHostException;
  *
  * @author Florian DAVID
  */
-public class MessageReceptor implements Runnable {
-    private final static Logger LOGGER = Logger.getLogger(MessageReceptor.class);
+public class MessageReceiver implements Runnable {
+    private final static Logger LOGGER = Logger.getLogger(MessageReceiver.class);
     
     private ObjectInputStream inS;
+
+    public ObjectInputStream getInS() {
+        return inS;
+    }
     
-    public void initConnection(Socket socket, ObjectInputStream objectInputStream) {
-        inS = objectInputStream;
+    public void initConnection(Socket socket) {
         // Création du stream d'entrée
-        /*try {
+        try {
             inS = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         } catch (SocketException e) {
             LOGGER.debug("SocketException", e);
@@ -34,7 +37,7 @@ public class MessageReceptor implements Runnable {
             LOGGER.debug("UnknownHostException", e);
         } catch (IOException e) {
             LOGGER.debug("IOException", e);
-        }*/
+        }
     }
     
     /**
@@ -42,7 +45,7 @@ public class MessageReceptor implements Runnable {
      * @return the received message sent by the server
      * @throws IOException
      */
-    protected String receiveMessage() throws IOException {
+    public String receiveMessage() throws IOException {
     
         try {
             // Réception de la réponse

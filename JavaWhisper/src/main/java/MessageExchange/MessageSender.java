@@ -7,11 +7,13 @@ package MessageExchange;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -21,20 +23,20 @@ import org.apache.log4j.Logger;
 public class MessageSender implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(MessageSender.class);
     private ObjectOutputStream outS;
-    
-    public void initConnection(Socket socket, ObjectOutputStream outputStream) {
-        outS = outputStream;
 
+    public ObjectOutputStream getOutS() {
+        return outS;
+    }
+    
+    public void initConnection(Socket socket) {
         // Création du stream de sortie
-        /*try {
+        try {
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        } catch (SocketException e) {
+        } catch (SocketException | UnknownHostException e) {
             LOGGER.error("SocketException", e);
-        } catch (UnknownHostException e) {
-            LOGGER.error("UnknownHostException", e);
         } catch (IOException e) {
             LOGGER.error("IOException", e);
-        }*/
+        }
     }
     
     /**
