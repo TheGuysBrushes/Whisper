@@ -93,11 +93,11 @@ public class Client {
             sendKey();
             LOGGER.info("Key exchanged");
         } catch (SocketException | UnknownHostException e) {
-            LOGGER.debug("SocketException", e);
+            LOGGER.error("SocketException", e);
         } catch (IOException e) {
-            LOGGER.debug("IOException", e);
+            LOGGER.error("IOException", e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("ClassNotFoundException", e);
         }
     }
 
@@ -118,11 +118,9 @@ public class Client {
             sendKey();
             receiveKey();
         } catch (SocketException | UnknownHostException e) {
-            LOGGER.debug("SocketException", e);
-        } catch (IOException e) {
-            LOGGER.debug("IOException", e);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("SocketException", e);
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.error("IOException", e);
         }
     }
     
@@ -173,7 +171,7 @@ public class Client {
 
             return decryptedReponse;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("ClassNotFoundException " + e);
             return "";
         }
     }
@@ -198,18 +196,6 @@ public class Client {
             } catch (InterruptedException e) {
                 LOGGER.error("InterruptedException", e);
             }
-    }
-
-    /**
-     * Encrypts and sends a message, then receive and decrypt a message form the server
-     * @param message : message to send
-     * @throws IOException
-     */
-    private void PingPong(String message) throws IOException {
-        encryptSendMessage(message);
-        String response= receiveDecryptMessage();
-
-        LOGGER.info("Réponse reçue : " + response);
     }
 
     /**

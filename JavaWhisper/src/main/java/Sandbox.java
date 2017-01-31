@@ -1,12 +1,14 @@
 import Client.Client;
-import Encryption.*;
-import java.io.IOException;
-import org.apache.log4j.Logger;
 
+import Encryption.*;
+
+import java.io.IOException;
 import java.math.BigInteger;
 
+import org.apache.log4j.Logger;
+
 /**
- * Created by etudiant on 18/01/17.
+ * Only used as a test sandbox
  */
 public class Sandbox {
     private final static Logger LOGGER = Logger.getLogger(Sandbox.class);
@@ -45,10 +47,8 @@ public class Sandbox {
         LOGGER.info("Message décrypté  : " + decryptedMSG);
     }
 
-
-    public static void main(String[] args) {
-        //testASCII();
-        
+    public static void startClientAsServer(String args[]) {
+                
         String s_port;
         if (args.length < 1) {
             s_port = "2000";
@@ -66,5 +66,10 @@ public class Sandbox {
         } catch (IOException e) {
             LOGGER.error("IOException", e);
         }
+    }
+
+    public static void main(String[] args) {
+        //testASCII();
+        startClientAsServer(args);
     }
 }
