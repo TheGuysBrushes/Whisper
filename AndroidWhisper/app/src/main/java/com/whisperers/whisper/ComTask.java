@@ -22,10 +22,12 @@ import Encryption.RSAEncryptor;
  * @author Florentin NOEL et Florian DAVID
  */
 
-class ComTask extends AsyncTask<String, Void, Void> {
+class ComTask extends AsyncTask<Whisper, Void, Whisper> {
     private static String TAG = "WHISPER";
 
-    /*** Encryption ***/
+    /***
+     * Encryption
+     ***/
     private PublicKey sharablePublicKey;
     private PrivateKey myPrivateKey;
 
@@ -33,19 +35,24 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
     private Encryptor encryptor;
 
-    /*** Réseau ***/
+    /***
+     * Réseau
+     ***/
     private ObjectInputStream inS;
     private ObjectOutputStream outS;
 
     private Socket socket;
 
     String address = "192.168.43.78";
-//        address = "localhost";
+    //String address = "192.168.43.78";
     String s_port = "2000";
 
     String default_message = "hello";
 
-    public ComTask() {
+    private BackgroundFragment tasksFragment;
+
+    public ComTask(BackgroundFragment tasksFragment) {
+        this.tasksFragment = tasksFragment;
         encryptor = new RSAEncryptor();
     }
 
@@ -54,18 +61,16 @@ class ComTask extends AsyncTask<String, Void, Void> {
      */
     private void generateKeys() {
         KeyGenerator generator = new KeyGenerator();
-
         sharablePublicKey = generator.generatePublicKey();
-
         myPrivateKey = generator.generatePrivateKey();
     }
 
     /**
      * Ends the connection between
+     *
      * @throws IOException
      */
     public void initConnection(String address, String s_port) throws IOException {
-
         generateKeys();
 
         int port = Integer.parseInt(s_port);
@@ -83,24 +88,27 @@ class ComTask extends AsyncTask<String, Void, Void> {
         } catch (SocketException | UnknownHostException e) {
             Log.w(TAG, "Exception de socket ou d'hote " + e);
         } catch (IOException | ClassNotFoundException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
     }
 
     /**
      * Encrypt and send a default_message to the server
+     *
      * @param message : default_message to send
      * @throws IOException
      */
     public void encryptSendMessage(String message) throws IOException {
 
         if (serverPublicKey == null) {
-            Log.i("","Je n'ai pas recu la clé public du serveur");
+            Log.i("MESSAGING", "Je n'ai pas recu la clé public du serveur");
             return;
         }
 
         // Envoi d'un default_message
         String messageCrypted = encryptor.encryptToString(message, serverPublicKey);
+
+        Log.i("MESSAGING", "Sending message.");
 
         outS.writeObject(messageCrypted);
         outS.flush();
@@ -115,7 +123,7 @@ class ComTask extends AsyncTask<String, Void, Void> {
     public String receiveDecryptMessage() throws IOException {
 
         if (myPrivateKey == null) {
-            Log.i("","Je n'ai pas recu la clé public du serveur");
+            Log.i("MESSAGING", "Je n'ai pas recu la clé public du serveur");
             return "";
         }
 
@@ -123,17 +131,18 @@ class ComTask extends AsyncTask<String, Void, Void> {
             // Réception de la réponse
             String response = (String) inS.readObject();
             String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
-            Log.i("","Réponse : " + decryptedReponse);
+            Log.i("MESSAGING", "Réponse : " + decryptedReponse);
 
             return decryptedReponse;
         } catch (ClassNotFoundException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
             return "";
         }
     }
 
     /**
      * Encrypts and sends a default_message, then receive and decrypt a default_message form the server
+     *
      * @param message : default_message to send
      * @throws IOException
      */
@@ -145,6 +154,7 @@ class ComTask extends AsyncTask<String, Void, Void> {
 
     /**
      * Ends the connection between
+     *
      * @throws IOException
      */
     public void closeConnection() throws IOException {
@@ -152,24 +162,34 @@ class ComTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected Whisper doInBackground(Whisper... whispers) {
         try {
             initConnection(address, s_port);
 
-            PingPong(default_message);
-            PingPong(default_message + " (1)");
-            PingPong(default_message + " (2)");
-            PingPong(default_message + " (3)");
+            encryptSendMessage(whispers[0].getContent());
+            Whisper response = new Whisper(receiveDecryptMessage(),false);
 
             closeConnection();
+            return response;
         } catch (IOException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
         return null;
     }
 
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected void onPostExecute(Whisper whisper) {
+        tasksFragment.onPostExecute(whisper);
+    }
+
     /**
      * Getter on the public key to share
+     *
      * @return sharable public key
      */
     public PublicKey getSharablePublicKey() {

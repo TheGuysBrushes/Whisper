@@ -4,41 +4,42 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.whisperers.whisper.MainActivity">
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/sendMsgLayout"
+        android:layout_alignParentTop="true"
         android:overScrollMode="always"
         android:stackFromBottom="true"
-        android:layout_alignParentTop="true" >
-    </ListView>
+        android:layout_margin="5sp"
+        android:divider="@null"/>
 
     <RelativeLayout
         android:id="@+id/sendMsgLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-        />
+            android:background="@android:color/darker_gray" />
 
         <EditText
             android:id="@+id/messageText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@+id/imageSend"
+            android:layout_marginStart="10dp"
+            android:layout_toStartOf="@+id/imageSend"
+            android:imeOptions="actionSend"
             android:hint="Chuchoter"
-            android:maxLines="3" >
+            android:maxLines="3">
+
             <requestFocus />
         </EditText>
 
@@ -47,8 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/messageText"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
             android:src="@android:drawable/ic_menu_send" />
     </RelativeLayout>
 </RelativeLayout>

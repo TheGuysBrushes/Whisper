@@ -23,34 +23,36 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
     // utilise le fichier xml pour afficher chaque élément de l'ArrayAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Whisper item= (Whisper)getItem(position);
+        Whisper item= getItem(position);
 
 //		applique le texte à la vue
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView= inflater.inflate(R.layout.line_message, parent, false);
-
-//        TextView text= (TextView)convertView.findViewById(R.id.TextFic_Dos);
-//        text.setText(nom);
+        View view = inflater.inflate(R.layout.line_message, parent, false);
 
 
-        TextView acronym= (TextView)convertView.findViewById(R.id.fileName);
+
+        TextView textMessage= (TextView)view.findViewById(R.id.textMsg);
         if (item != null) {
-            acronym.setText(item.getContent());
+            textMessage.setText(item.getContent());
         }
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
         if (item.hasBeenSendByMe()) {
-            acronym.setBackgroundColor(Color.argb(150,50,200,100));
-
             params.gravity = Gravity.RIGHT;
+            textMessage.setLayoutParams(params);
+
+            textMessage.setBackgroundResource(R.drawable.blue_radius);
         } else {
-            acronym.setBackgroundColor(Color.argb(150,50,100,200));
-
             params.gravity = Gravity.LEFT;
-        }
-        acronym.setLayoutParams(params);
+            textMessage.setLayoutParams(params);
 
-        return convertView;
+            textMessage.setBackgroundResource(R.drawable.green_radius);
+        }
+
+        textMessage.setTextColor(Color.WHITE);
+
+        return view;
     }
 
 }
