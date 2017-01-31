@@ -2,11 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16b7ef5b-da2c-4ca3-a58b-0dcfe92a22bf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../WhisperEncryption/src/main/resources/log4j.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/pom.xml" afterPath="$PROJECT_DIR$/../WhisperEncryption/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/Encryption/KeyGenerator.java" afterPath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/Encryption/KeyGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/Encryption/RSAEncryptor.java" afterPath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/Encryption/RSAEncryptor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/BackgroundFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/drawable/blue_radius.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/drawable/green_radius.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Client/Client.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Encryption/Encryptor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Encryption/KeyGenerator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Encryption/PrivateKey.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Encryption/PublicKey.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Encryption/RSAEncryptor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Sandbox.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Server/Server.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/Server/Serveur.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../target/classes/log4j.properties" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.idea/workspace.xml" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ChatAdapter.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ChatAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ComTask.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ComTask.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/Whisper.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/Whisper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/line_message.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/line_message.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/colors.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,8 +42,8 @@
       <file leaf-file-name="Client.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="155" column="30" lean-forward="true" selection-start-line="155" selection-start-column="30" selection-end-line="155" selection-end-column="30" />
+            <state relative-caret-position="2754">
+              <caret line="155" column="30" lean-forward="false" selection-start-line="155" selection-start-column="30" selection-end-line="155" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -37,7 +54,7 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="667">
+            <state relative-caret-position="669">
               <caret line="88" column="37" lean-forward="false" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="37" />
               <folding />
             </state>
@@ -103,6 +120,8 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -223,8 +242,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -512,7 +529,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1044" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -523,8 +540,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3287234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -534,8 +551,8 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -560,6 +577,40 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2754">
+          <caret line="155" column="30" lean-forward="true" selection-start-line="155" selection-start-column="30" selection-end-line="155" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Sandbox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2952">
@@ -636,8 +687,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="155" column="30" lean-forward="true" selection-start-line="155" selection-start-column="30" selection-end-line="155" selection-end-column="30" />
+        <state relative-caret-position="2754">
+          <caret line="155" column="30" lean-forward="false" selection-start-line="155" selection-start-column="30" selection-end-line="155" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -646,7 +697,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
+        <state relative-caret-position="669">
           <caret line="88" column="37" lean-forward="false" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="37" />
           <folding />
         </state>
