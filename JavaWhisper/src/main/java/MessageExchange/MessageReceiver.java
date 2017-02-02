@@ -67,7 +67,11 @@ public class MessageReceiver implements Runnable {
         do {
             try {
                 message= receiveMessage();
+                System.out.flush();
+                for (int i= 0; i < "Chuchoter :".length(); ++i) System.out.print("\b");
+                
                 System.out.println("SENDER_NAME : " + message);
+                System.out.print("Chuchoter : ");
             } catch (IOException e) {
                 LOGGER.error("Exception : "+ e);
             }
