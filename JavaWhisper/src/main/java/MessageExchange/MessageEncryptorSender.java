@@ -8,10 +8,8 @@ package MessageExchange;
 import Encryption.Encryptor;
 import Encryption.PublicKey;
 import Encryption.RSAEncryptor;
-import java.io.BufferedOutputStream;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import org.apache.log4j.Logger;
 

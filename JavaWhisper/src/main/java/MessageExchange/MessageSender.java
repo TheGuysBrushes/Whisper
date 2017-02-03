@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  *
  * @author Florian DAVID
  */
-public class MessageSender implements Runnable {
+public class MessageSender {
     private final static Logger LOGGER = Logger.getLogger(MessageSender.class);
     private ObjectOutputStream outS;
 
@@ -47,26 +47,5 @@ public class MessageSender implements Runnable {
         outS.writeObject(message);
         outS.flush();
     }
-        
-    /**
-     * Override of the run method
-     */
-    @Override
-    public void run() {
-        Scanner textscan=new Scanner(System.in);
-        
-        String message;
-        do {
-            
-            System.out.print("ME : ");
-            message= textscan.nextLine();
-            
-            try {
-//                System.out.println("Me : " + message);
-                sendMessage(message);
-            } catch (IOException e) {
-                LOGGER.error("Exception : "+ e);
-            }
-        } while (! message.equals("quit"));
-    }
+
 }

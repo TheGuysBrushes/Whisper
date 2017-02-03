@@ -25,7 +25,8 @@ public class MessageDecryptorReceiver extends MessageReceiver {
     private PrivateKey myPrivateKey;
     final private Encryptor encryptor;
     
-    public MessageDecryptorReceiver() {
+    public MessageDecryptorReceiver(MessageDisplayer msgDisplayer) {
+        super(msgDisplayer);
         encryptor = new RSAEncryptor();
     }
     

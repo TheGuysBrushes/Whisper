@@ -1,4 +1,5 @@
 import Client.Client;
+import Client.ClientGUI;
 
 import Encryption.*;
 
@@ -57,12 +58,81 @@ public class Sandbox {
             s_port = args[0];
         }
 
-        
-        Client client= new Client();
+        boolean hasGUI= true;
+        Client client= new Client(hasGUI);
         try {
             client.initConnection(s_port);
             client.startChat();
+            client.stopChat();
             client.closeConnection();
+        } catch (IOException e) {
+            LOGGER.error("IOException", e);
+        }
+    }
+    
+    public static void OLDstartGUIClientAsServer(String[] args) {
+
+        String s_port;
+        if (args.length < 1) {
+            s_port = "2000";
+        } else {
+            s_port = args[0];
+        }
+        
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+
+        
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ClientGUI(/*s_port*/).setVisible(true);
+                
+//                ClientGUI.client.stopChat();
+//                client.closeConnection();
+            }
+        });
+    }
+    
+        
+    public static void startGUIClientAsServer(String[] args) {
+
+        String s_port;
+        if (args.length < 1) {
+            s_port = "2000";
+        } else {
+            s_port = args[0];
+        }
+
+        boolean has_GUI= true;
+        Client client = new Client(has_GUI);
+
+        try {
+            client.initConnection(s_port);
+            client.startChat();
+//            client.stopChat();
+//            client.closeConnection();
         } catch (IOException e) {
             LOGGER.error("IOException", e);
         }
@@ -70,6 +140,7 @@ public class Sandbox {
 
     public static void main(String[] args) {
         //testASCII();
-        startClientAsServer(args);
+//        startClientAsServer(args);
+        startGUIClientAsServer(args);
     }
 }

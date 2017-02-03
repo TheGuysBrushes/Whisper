@@ -25,11 +25,36 @@ public class Client {
     
     final private MessageEncryptorSender sender;
     final private MessageDecryptorReceiver receiver;
+    
+    final private MessageWriter msg_sender;
+    private Thread msg_receiver;
 
-    public Client() {
+    public Client(boolean hasGUI) {
         sender= new MessageEncryptorSender();
-        receiver= new MessageDecryptorReceiver();
+        
+        MessageDisplayer displayer;
+        if (hasGUI) {
+            ClientGUI GUI= new ClientGUI(/*s_port*/);
+            GUI.setMessageSender(sender);
+            GUI.setVisible(true);
+            displayer= GUI;
+            msg_sender= GUI;
+        } else {
+            displayer= new TermDisplayer();
+            msg_sender= new TermWriter();
+        }
+        
+        receiver= new MessageDecryptorReceiver(displayer);
     }
+
+    public MessageEncryptorSender getSender() {
+        return sender;
+    }
+
+    public MessageDecryptorReceiver getReceiver() {
+        return receiver;
+    }
+    
     
     /**
      * Generate both public and private key
@@ -124,21 +149,21 @@ public class Client {
     }
     
     public void startChat() {
+        msg_sender.startSending();
         
-            // Lancement du Thread d'envoi de messages
-            Thread msg_sender= new Thread(sender);
-            msg_sender.start();
+        // Lancement du Thread de réception de messages
+        msg_receiver= new Thread(receiver);
+        msg_receiver.start();
 
-            // Lancement du Thread de réception de messages
-            Thread msg_receiver= new Thread(receiver);
-            msg_receiver.start();
-        
-            try {
-                msg_sender.join();
-                msg_receiver.join();
-            } catch (InterruptedException e) {
-                LOGGER.error("InterruptedException", e);
-            }
+    }
+    
+    public void stopChat() {
+        try {
+            msg_sender.stopSending();
+            msg_receiver.join();
+        } catch (InterruptedException e) {
+            LOGGER.error("InterruptedException", e);
+        }
     }
 
     /**
@@ -146,36 +171,30 @@ public class Client {
      *  "args[0]" is the address and "args[1]" the port
      */
     public static void main(String[] args) {
-                        
-        String message;
-        if (args.length < 1) {
-            message = "hello";
-        } else {
-            message = args[0];
-        }
-        
+
         String address;
-        if (args.length < 2) {
+        if (args.length < 1) {
             address = "localhost";
         } else {
-            address = args[1];
+            address = args[0];
         }
         //address = "192.168.99.107";
 
-
         String s_port;
-        if (args.length < 3) {
+        if (args.length < 2) {
             s_port = "2000";
         } else {
-            s_port = args[2];
+            s_port = args[1];
         }
 
-        Client client = new Client();
+        boolean has_GUI= true;
+        Client client = new Client(has_GUI);
 
         try {
             client.initConnection(address, s_port);
             client.startChat();
-            client.closeConnection();
+//            client.stopChat();
+//            client.closeConnection();
         } catch (IOException e) {
             LOGGER.error("IOException", e);
         }

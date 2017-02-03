@@ -22,7 +22,14 @@ public class MessageReceiver implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(MessageReceiver.class);
     
     private ObjectInputStream inS;
+    private MessageDisplayer displayer;
 
+    public MessageReceiver(MessageDisplayer msgDisplayer) {
+        displayer= msgDisplayer;
+    }
+
+    
+    
     public ObjectInputStream getInS() {
         return inS;
     }
@@ -67,11 +74,10 @@ public class MessageReceiver implements Runnable {
         do {
             try {
                 message= receiveMessage();
-                System.out.flush();
-                for (int i= 0; i < "Chuchoter :".length(); ++i) System.out.print("\b");
+                displayer.showMessage(message);
                 
-                System.out.println("SENDER_NAME : " + message);
-                System.out.print("Chuchoter : ");
+//                ActionEvent messageReceivedEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, message);
+                
             } catch (IOException e) {
                 LOGGER.error("Exception : "+ e);
             }
