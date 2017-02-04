@@ -25,10 +25,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
-                    <!-- DO NOT include log4j.properties file in your Jar -->
+                     <!--DO NOT include log4j.properties file in your Jar--> 
                     <excludes>
-                       <exclude>**/log4j.properties</exclude> S
+                       <exclude>**/log4j.properties</exclude>
                     </excludes>
                     <archive>
                         <manifest>

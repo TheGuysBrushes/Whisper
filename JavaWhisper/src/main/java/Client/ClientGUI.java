@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import javafx.scene.input.KeyCode;
 import org.apache.log4j.Logger;
 
 /**
@@ -29,8 +28,9 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
 //    private Client client;
     private MessageSender sender;
+    private final String SENDER_NAME = "SENDER_NAME";
     
-    private String[] messages;
+//    private String[] messages;
     
     /**
      * Creates new form ClientGUI
@@ -38,16 +38,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
      * @param s_port : which port to use
      */
     public ClientGUI(String address, String s_port) {
-        messages= new String[0];
-
-//        client = new Client();
-
-//        try {
-//            client.initConnection(address, s_port);
-//            client.startChat();
-//        } catch (IOException e) {
-//            LOGGER.error("IOException", e);
-//        }
+//        messages= new String[0];
         
         initComponents();
     }
@@ -58,16 +49,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //     * @param s_port : which port to use
      */
     public ClientGUI(/*String s_port*/) {
-        messages= new String[0];
-
-//        client = new Client();
-
-//        try {
-//            client.initConnection(s_port);
-//            client.startChat();
-//        } catch (IOException e) {
-//            LOGGER.error("IOException", e);
-//        }
+//        messages= new String[0];
         
         initComponents();
     }
@@ -139,7 +121,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         tabPanel.add(messagePanel, java.awt.BorderLayout.PAGE_END);
 
-        jTabbedPane1.addTab("SENDER_NAME", tabPanel);
+        jTabbedPane1.addTab("<html><i>SENDER_NAME</i></html>", tabPanel);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
@@ -251,38 +233,40 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 
-    
+    private void addMessage(String message) {
+        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
+        String[] messages= new String[listModel.getSize() + 1];
+        
+        int i= 0;
+        for (; i < listModel.getSize(); ++i) {
+            messages[i]= listModel.getElementAt(i);
+        }
+        messages[i]= message;
+        
+        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = messages;
+            @Override
+            public int getSize() { return strings.length; }
+            @Override
+            public String getElementAt(int i) { return strings[i]; }
+        });
+    }
     
     @Override
     public void showMessage(String message) { 
-//        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
-//        String[] messages= new String[listModel.getSize() + 1];
-//        
-//        int i= 0;
-//        for (; i < listModel.getSize(); ++i) {
-//            messages[i]= listModel.getElementAt(i);
-//        }
-//        messages[i]= message;
-//        
-//        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
-//            String[] strings = messages;
-//            @Override
-//            public int getSize() { return strings.length; }
-//            @Override
-//            public String getElementAt(int i) { return strings[i]; }
-//        });
+        addMessage(SENDER_NAME+ " : " + message);
         
 //        messagesList.add(new Component() {
 //})
 
-        String[] new_messages= new String[messages.length +1];
-        
-        int i= 0;
-        for (; i < messages.length; ++i) {
-            new_messages[i]= messages[i];
-        }
-        messages= new_messages;
-        messages[i]= message;
+//        String[] new_messages= new String[messages.length +1];
+//        
+//        int i= 0;
+//        for (; i < messages.length; ++i) {
+//            new_messages[i]= messages[i];
+//        }
+//        messages= new_messages;
+//        messages[i]= message;
     }
 
     @Override
@@ -292,8 +276,9 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
     public void sendMessage() {
         try {
-            messageField.setText(DEFAULT_TEXT);
             sender.sendMessage(messageField.getText());
+            addMessage("ME : " + messageField.getText());
+            messageField.setText(DEFAULT_TEXT);
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
         }

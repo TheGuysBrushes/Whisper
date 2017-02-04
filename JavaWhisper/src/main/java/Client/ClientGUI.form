@@ -53,8 +53,8 @@
         <Container class="javax.swing.JPanel" name="tabPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="SENDER_NAME">
-                <Property name="tabTitle" type="java.lang.String" value="SENDER_NAME"/>
+              <JTabbedPaneConstraints tabName="&lt;html&gt;&lt;i&gt;SENDER_NAME&lt;/i&gt;&lt;/html&gt;">
+                <Property name="tabTitle" type="java.lang.String" value="&lt;html&gt;&lt;i&gt;SENDER_NAME&lt;/i&gt;&lt;/html&gt;"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

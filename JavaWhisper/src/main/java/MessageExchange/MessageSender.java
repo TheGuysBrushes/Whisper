@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
