@@ -43,7 +43,9 @@ public class MessageSender {
      * @throws IOException
      */
     public void sendMessage(String message) throws IOException {
-        outS.writeObject(message);
+        Whisper whisp= new Whisper(message);
+//        outS.writeObject(message);
+        outS.writeObject(whisp);
         outS.flush();
     }
 

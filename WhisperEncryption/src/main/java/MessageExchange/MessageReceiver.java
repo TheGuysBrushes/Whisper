@@ -52,16 +52,17 @@ public class MessageReceiver implements Runnable {
      * @return the received message sent by the server
      * @throws IOException
      */
-    public String receiveMessage() throws IOException {
+    public Whisper receiveMessage() throws IOException {
     
         try {
             // Réception de la réponse
-            String response = (String) inS.readObject();
+//            String response = (String) inS.readObject();
+            Whisper response = (Whisper) inS.readObject();
 
             return response;
         } catch (ClassNotFoundException e) {
             LOGGER.error("Exception : "+ e);
-            return "";
+            return new Whisper("ERROR");
         }
     }
     
@@ -70,7 +71,7 @@ public class MessageReceiver implements Runnable {
      */
     @Override
     public void run() {
-        String message= "quit";
+        Whisper message= new Whisper("quit");
         do {
             try {
                 message= receiveMessage();

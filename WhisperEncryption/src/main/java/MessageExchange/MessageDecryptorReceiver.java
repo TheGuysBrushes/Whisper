@@ -40,18 +40,18 @@ public class MessageDecryptorReceiver extends MessageReceiver {
      * @throws IOException
      */
     @Override
-    public String receiveMessage() throws IOException {
+    public Whisper receiveMessage() throws IOException {
 
         if (myPrivateKey == null) {
             LOGGER.error("Je n'ai pas recu la clé public du serveur");
-            return "";
+            return new Whisper("ERROR");
         }
 
         // Réception de la réponse
-        String response = super.receiveMessage();
-        String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
+        Whisper response = super.receiveMessage();
+        response.decrypt(encryptor, myPrivateKey);
 
-        return decryptedReponse;
+        return response;
     }
     
             

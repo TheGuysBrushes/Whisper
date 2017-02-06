@@ -9,6 +9,7 @@ import MessageExchange.MessageReceiver;
 import MessageExchange.MessageDisplayer;
 import MessageExchange.MessageSender;
 import MessageExchange.MessageWriter;
+import MessageExchange.Whisper;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,9 +23,6 @@ import org.apache.log4j.Logger;
  */
 public class ClientGUI extends javax.swing.JFrame implements ActionListener, MessageDisplayer, MessageWriter {
     private final static Logger LOGGER = Logger.getLogger(ClientGUI.class);
-    private final static String //<editor-fold defaultstate="collapsed" desc="comment">
-            DEFAULT_TEXT//</editor-fold>
-            = "Chuchoter :";
 
 //    private Client client;
     private MessageSender sender;
@@ -233,6 +231,10 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 
+//    private void addMessage(Whisper message) {
+//        
+//    }
+    
     private void addMessage(String message) {
         javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
         String[] messages= new String[listModel.getSize() + 1];
@@ -267,6 +269,15 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //        }
 //        messages= new_messages;
 //        messages[i]= message;
+    }
+
+    @Override
+    public void showMessage(Whisper message)     {
+        if (message.hasBeenSendByMe()) {
+            addMessage("ME : " + message.getContent());
+        } else {
+            addMessage(message.toString());
+        }
     }
 
     @Override
