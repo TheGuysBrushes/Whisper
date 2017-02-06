@@ -1,5 +1,6 @@
 package com.whisperers.whisper;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  * Created by Work on 1/30/2017.
  */
 
-public class Whisper {
+public class Whisper implements Serializable{
     private Date time;
     private String content;
     private boolean has_been_send_by_me;

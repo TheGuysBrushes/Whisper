@@ -6,14 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends ListActivity implements BackgroundFragment.TaskCallBacks{
+public class MainActivity extends ListActivity implements BackgroundFragment.TaskCallBacks {
     private ChatAdapter chatAdapter;
     private BackgroundFragment mTaskFragment;
     private static final String TAG_TASKS_FRAGMENT = "TASK_FRAGMENT";
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save the fragment's instance
+        getFragmentManager().putFragment(outState, TAG_TASKS_FRAGMENT, mTaskFragment);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +30,12 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         chatAdapter.add(new Whisper("Hello", true));
         chatAdapter.add(new Whisper("Hello you !", false));
 
+
         FragmentManager fm = getFragmentManager();
-        mTaskFragment = (BackgroundFragment) fm.findFragmentByTag(TAG_TASKS_FRAGMENT);
+        if (savedInstanceState != null) {
+            //Restore the fragment's instance
+            mTaskFragment = (BackgroundFragment) fm.getFragment(savedInstanceState, TAG_TASKS_FRAGMENT);
+        }
         if (mTaskFragment == null) {
             mTaskFragment = new BackgroundFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASKS_FRAGMENT).commit();
@@ -36,7 +46,6 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             mTaskFragment.setAdapter(new ChatAdapter(this));
         }
 
-
         setListAdapter(chatAdapter);
         TextView texte = (TextView) findViewById(R.id.messageText);
 
@@ -44,7 +53,8 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         imageSend.setOnClickListener((View v) -> {
             Log.d("WHISPER", "Click send button");
             String message = texte.getText().toString();
-            Whisper whisper = new Whisper(message,true);
+            texte.setText("");
+            Whisper whisper = new Whisper(message, true);
             chatAdapter.add(whisper);
             chatAdapter.notifyDataSetChanged();
             mTaskFragment.sendNewMessage(whisper);
@@ -59,9 +69,14 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     }
 
     @Override
-    public void onItemDone(Whisper whisper) {
-        chatAdapter.add(whisper);
-        chatAdapter.notifyDataSetChanged();
+    public void onMessageReceived(Whisper whisper) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chatAdapter.add(whisper);
+                chatAdapter.notifyDataSetChanged();
+            }
+        });
         Log.d("WHISPER", "Message complete");
     }
 }
