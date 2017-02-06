@@ -187,6 +187,7 @@ public class Client {
             s_port = args[1];
         }
 
+        Whisper.setMyName("Alice");
         boolean has_GUI= true;
         Client client = new Client(has_GUI);
 

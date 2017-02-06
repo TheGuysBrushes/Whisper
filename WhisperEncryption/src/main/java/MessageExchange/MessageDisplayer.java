@@ -5,15 +5,16 @@
  */
 package MessageExchange;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 /**
  *
  * @author flodavid
  */
 public interface MessageDisplayer{
+    public final static String //<editor-fold defaultstate="collapsed" desc="comment">
+            DEFAULT_TEXT//</editor-fold>
+            = "Chuchoter...";
     
     public void showMessage(String message);
+    public void showMessage(Whisper message);
 
 }

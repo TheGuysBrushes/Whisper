@@ -2,9 +2,12 @@ import Client.Client;
 import Client.ClientGUI;
 
 import Encryption.*;
+import MessageExchange.Whisper;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
 
@@ -127,6 +130,8 @@ public class Sandbox {
 
         boolean has_GUI= true;
         Client client = new Client(has_GUI);
+        
+        Whisper.setMyName("Bob");
 
         try {
             client.initConnection(s_port);
@@ -137,10 +142,23 @@ public class Sandbox {
             LOGGER.error("IOException", e);
         }
     }
+    
+    public static void showIPAddress() {        
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            System.out.println("Your current IP address : " + ip.getHostAddress());
+        } catch (UnknownHostException e) {
+ 
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
-        //testASCII();
+//        testASCII();
 //        startClientAsServer(args);
+//        showIPAddress();
+
         startGUIClientAsServer(args);
     }
 }
