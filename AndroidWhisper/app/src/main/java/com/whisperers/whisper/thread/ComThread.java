@@ -3,7 +3,6 @@ package com.whisperers.whisper.thread;
 import android.util.Log;
 
 import com.whisperers.whisper.BackgroundFragment;
-import com.whisperers.whisper.Whisper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,6 +18,7 @@ import Encryption.KeyGenerator;
 import Encryption.PrivateKey;
 import Encryption.PublicKey;
 import Encryption.RSAEncryptor;
+import MessageExchange.Whisper;
 
 /**
  * Created by etudiant on 02/02/17.
@@ -36,8 +36,8 @@ public class ComThread extends Thread {
     private InputStream inS;
     private ObjectOutputStream outS;
 
-    private String messageToSend;
-    private String messageReceived;
+    private Whisper messageToSend;
+    private Whisper messageReceived;
     private Socket socket;
     String address = "192.168.43.78";
     int port = 2000;
@@ -48,9 +48,8 @@ public class ComThread extends Thread {
 
     public ComThread(BackgroundFragment fragment) {
         encryptor = new RSAEncryptor();
-        messageToSend = "";
-        messageReceived = "";
-        // this.socket = socket;
+        messageToSend = null;
+        messageReceived = null;
         this.fragment = fragment;
         Log.i(TAG, "Création thread communication");
     }
@@ -83,14 +82,14 @@ public class ComThread extends Thread {
             while (!running)
                 yield();
             sendReceiveMessage();
-        } while (!messageReceived.equals("quit"));
+        } while (messageReceived == null || !messageReceived.getContent().equals("quit"));
     }
 
     public void sendReceiveMessage() {
-        Log.i(TAG, "Boucle");
-        if (!messageToSend.isEmpty()) {
+        if (messageToSend != null) {
             Log.i(TAG, "Envoi du message : " + messageToSend);
             try {
+                Log.i(TAG, "sendReceiveMessage: "+messageToSend.toString());
                 sendMessage();
             } catch (IOException e) {
                 Log.e(TAG, "run: ", e);
@@ -98,21 +97,19 @@ public class ComThread extends Thread {
         }
 
         try {
-            Log.i(TAG, "Data dispo : " + inS.available());
             if (inS.available() > 1) {
-                String response = (String) oinS.readObject();
-
-                if (response != null) {
-                    Log.i(TAG, "Reception du message : " + response);
-                    Whisper whisper = new Whisper(receiveDecryptMessage(response), false);
-                    fragment.onMessageReceived(whisper);
+                messageReceived = (Whisper) oinS.readObject();
+                if (messageReceived != null) {
+                    Log.i(TAG, "sendReceiveMessage: "+messageReceived.toString());
+                    messageReceived.decrypt(encryptor, myPrivateKey);
+                    fragment.onMessageReceived(messageReceived);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
             Log.e(TAG, "Erreur message", e);
         }
         try {
-            sleep(2000);
+            sleep(1000);
         } catch (InterruptedException e) {
             Log.d(TAG, "Exception", e);
         }
@@ -155,31 +152,11 @@ public class ComThread extends Thread {
             return;
         }
 
-        // Envoi d'un message
-        String messageCrypted = encryptor.encryptToString(messageToSend, serverPublicKey);
-        outS.writeObject(messageCrypted);
+        messageToSend.encrypt(encryptor, serverPublicKey);
+        outS.writeObject(messageToSend);
         outS.flush();
 
-        messageToSend = "";
-    }
-
-    /**
-     * Receive and decrypt a default_message sent by the server
-     *
-     * @return the received default_message sent by the server
-     * @throws IOException
-     */
-    public String receiveDecryptMessage(String response) throws IOException {
-
-        if (myPrivateKey == null) {
-            Log.i("MESSAGING", "Je n'ai pas recu la clé public du serveur");
-            return "";
-        }
-
-        // Réception de la réponse
-        String decryptedReponse = encryptor.decrypt(response, myPrivateKey);
-        Log.i("MESSAGING", "Réponse : " + decryptedReponse);
-        return decryptedReponse;
+        messageToSend = null;
     }
 
     /**
@@ -207,17 +184,15 @@ public class ComThread extends Thread {
         serverPublicKey = publicKey;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Whisper message) {
         this.messageToSend = message;
     }
 
-    public void pauseThread() throws InterruptedException
-    {
+    public void pauseThread() throws InterruptedException {
         running = false;
     }
 
-    public void resumeThread()
-    {
+    public void resumeThread() {
         running = true;
     }
 }

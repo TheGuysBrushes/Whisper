@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16b7ef5b-da2c-4ca3-a58b-0dcfe92a22bf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ComThread.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ConnectionThread.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ComTask.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/Whisper.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/libs/WhisperEncryption-1.0-SNAPSHOT.jar" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/libs/WhisperEncryption-1.0-SNAPSHOT.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/BackgroundFragment.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/BackgroundFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ChatAdapter.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ChatAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/Whisper.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/Whisper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ComThread.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ComThread.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/WhisperEncryption.iml" afterPath="$PROJECT_DIR$/../WhisperEncryption/WhisperEncryption.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/MessageExchange/Whisper.java" afterPath="$PROJECT_DIR$/../WhisperEncryption/src/main/java/MessageExchange/Whisper.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -69,10 +69,10 @@
       <file leaf-file-name="Sandbox.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Sandbox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="63" column="25" lean-forward="false" selection-start-line="63" selection-start-column="25" selection-end-line="63" selection-end-column="25" />
+            <state relative-caret-position="1116">
+              <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
               <folding>
-                <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+                <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -542,7 +542,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3287234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -615,7 +615,7 @@
         <state relative-caret-position="990">
           <caret line="63" column="25" lean-forward="false" selection-start-line="63" selection-start-column="25" selection-end-line="63" selection-end-column="25" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -645,7 +645,7 @@
         <state relative-caret-position="1008">
           <caret line="63" column="22" lean-forward="false" selection-start-line="63" selection-start-column="22" selection-end-line="63" selection-end-column="22" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -673,7 +673,7 @@
         <state relative-caret-position="1008">
           <caret line="63" column="22" lean-forward="false" selection-start-line="63" selection-start-column="22" selection-end-line="63" selection-end-column="22" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -701,7 +701,7 @@
         <state relative-caret-position="1008">
           <caret line="63" column="22" lean-forward="false" selection-start-line="63" selection-start-column="22" selection-end-line="63" selection-end-column="22" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -728,7 +728,7 @@
         <state relative-caret-position="18">
           <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -755,7 +755,7 @@
         <state relative-caret-position="18">
           <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -773,7 +773,7 @@
         <state relative-caret-position="18">
           <caret line="1" column="17" lean-forward="true" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -818,10 +818,10 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/MessageExchange/MessageDecryptorReceiver.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/Sandbox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="63" column="25" lean-forward="false" selection-start-line="63" selection-start-column="25" selection-end-line="63" selection-end-column="25" />
+        <state relative-caret-position="1116">
+          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
           <folding>
-            <marker date="1486369114349" expanded="true" signature="4664:4670" ph="{...}" />
+            <marker date="1486396826864" expanded="true" signature="5149:5155" ph="{...}" />
           </folding>
         </state>
       </provider>

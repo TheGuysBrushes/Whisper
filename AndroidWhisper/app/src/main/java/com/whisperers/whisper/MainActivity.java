@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import MessageExchange.Whisper;
+
 public class MainActivity extends ListActivity implements BackgroundFragment.TaskCallBacks {
     private ChatAdapter chatAdapter;
     private BackgroundFragment mTaskFragment;
     private static final String TAG_TASKS_FRAGMENT = "TASK_FRAGMENT";
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -25,11 +28,11 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Whisper.setMyName("Bobdroid");
 
         chatAdapter = new ChatAdapter(this);
-        chatAdapter.add(new Whisper("Hello", true));
-        chatAdapter.add(new Whisper("Hello you !", false));
-
+        chatAdapter.add(new Whisper("Hello"));
+        chatAdapter.add(new Whisper("Hello you !"));
 
         FragmentManager fm = getFragmentManager();
         if (savedInstanceState != null) {
@@ -54,8 +57,8 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             Log.d("WHISPER", "Click send button");
             String message = texte.getText().toString();
             texte.setText("");
-            Whisper whisper = new Whisper(message, true);
-            chatAdapter.add(whisper);
+            Whisper whisper = new Whisper(message);
+            chatAdapter.add(new Whisper(whisper));
             chatAdapter.notifyDataSetChanged();
             mTaskFragment.sendNewMessage(whisper);
         });
@@ -73,7 +76,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                chatAdapter.add(whisper);
+                chatAdapter.add(new Whisper(whisper));
                 chatAdapter.notifyDataSetChanged();
             }
         });

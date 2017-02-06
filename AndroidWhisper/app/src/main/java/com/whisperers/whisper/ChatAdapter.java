@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import MessageExchange.Whisper;
+
 /**
  * Created by Work on 1/30/2017.
  */
@@ -32,22 +34,20 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
 
 
         TextView textMessage= (TextView)view.findViewById(R.id.textMsg);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         if (item != null) {
             textMessage.setText(item.getContent());
-        }
+            if (item.hasBeenSendByMe()) {
+                params.gravity = Gravity.RIGHT;
+                textMessage.setLayoutParams(params);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                textMessage.setBackgroundResource(R.drawable.blue_radius);
+            } else {
+                params.gravity = Gravity.LEFT;
+                textMessage.setLayoutParams(params);
 
-        if (item.hasBeenSendByMe()) {
-            params.gravity = Gravity.RIGHT;
-            textMessage.setLayoutParams(params);
-
-            textMessage.setBackgroundResource(R.drawable.blue_radius);
-        } else {
-            params.gravity = Gravity.LEFT;
-            textMessage.setLayoutParams(params);
-
-            textMessage.setBackgroundResource(R.drawable.green_radius);
+                textMessage.setBackgroundResource(R.drawable.green_radius);
+            }
         }
 
         textMessage.setTextColor(Color.WHITE);

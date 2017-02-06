@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.whisperers.whisper.thread.ComThread;
-import com.whisperers.whisper.thread.ConnectionThread;
+
+import MessageExchange.Whisper;
 
 /**
  * Created by etudiant on 31/01/17.
@@ -27,12 +28,12 @@ public class BackgroundFragment extends Fragment {
     }
 
     public void sendNewMessage(Whisper whisper) {
-        adapter.add(whisper);
-        comThread.setMessage(whisper.getContent());
+        adapter.add(new Whisper(whisper));
+        comThread.setMessage(whisper);
     }
 
     public void onMessageReceived(Whisper newWhisper) {
-        adapter.add(newWhisper);
+        adapter.add(new Whisper(newWhisper));
         if (mMainActivityListener != null) mMainActivityListener.onMessageReceived(newWhisper);
     }
 
