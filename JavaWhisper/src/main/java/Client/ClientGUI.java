@@ -24,11 +24,8 @@ import org.apache.log4j.Logger;
 public class ClientGUI extends javax.swing.JFrame implements ActionListener, MessageDisplayer, MessageWriter {
     private final static Logger LOGGER = Logger.getLogger(ClientGUI.class);
 
-//    private Client client;
     private MessageSender sender;
     private final String SENDER_NAME = "SENDER_NAME";
-    
-//    private String[] messages;
     
     /**
      * Creates new form ClientGUI
@@ -71,6 +68,8 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         cancelButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -124,6 +123,23 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("Connect");
+
+        jMenuItem1.setText("Connexion à l'aut'");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Attendre la connexion");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("About");
@@ -149,6 +165,14 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private void messageFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageFieldKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) sendMessage();
     }//GEN-LAST:event_messageFieldKeyPressed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      *
@@ -222,6 +246,8 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField messageField;
     private javax.swing.JPanel messagePanel;
@@ -234,25 +260,6 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //    private void addMessage(Whisper message) {
 //        
 //    }
-    
-    private void addMessage(String message) {
-        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
-        String[] messages= new String[listModel.getSize() + 1];
-        
-        int i= 0;
-        for (; i < listModel.getSize(); ++i) {
-            messages[i]= listModel.getElementAt(i);
-        }
-        messages[i]= message;
-        
-        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = messages;
-            @Override
-            public int getSize() { return strings.length; }
-            @Override
-            public String getElementAt(int i) { return strings[i]; }
-        });
-    }
     
     @Override
     public void showMessage(String message) { 
@@ -285,16 +292,6 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         sender= msgSender;
     }
 
-    public void sendMessage() {
-        try {
-            sender.sendMessage(messageField.getText());
-            addMessage("ME : " + messageField.getText());
-            messageField.setText(DEFAULT_TEXT);
-        } catch (IOException e) {
-            System.err.println("Impossible d'envoyer le message" + e.getMessage());
-        }
-    }
-
     @Override
     public void startSending() {
         setVisible(true);
@@ -304,5 +301,34 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     @Override
     public void stopSending() {
         setVisible(false);
+    }
+        
+    private void addMessage(String message) {
+        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
+        String[] messages= new String[listModel.getSize() + 1];
+        
+        int i= 0;
+        for (; i < listModel.getSize(); ++i) {
+            messages[i]= listModel.getElementAt(i);
+        }
+        messages[i]= message;
+        
+        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = messages;
+            @Override
+            public int getSize() { return strings.length; }
+            @Override
+            public String getElementAt(int i) { return strings[i]; }
+        });
+    }
+    
+    public void sendMessage() {
+        try {
+            sender.sendMessage(messageField.getText());
+            addMessage("ME : " + messageField.getText());
+            messageField.setText(DEFAULT_TEXT);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer le message" + e.getMessage());
+        }
     }
 }
