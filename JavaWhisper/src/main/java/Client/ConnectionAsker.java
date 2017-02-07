@@ -6,6 +6,9 @@
 package Client;
 
 import MessageExchange.Whisper;
+import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 
 /**
@@ -22,6 +25,20 @@ public class ConnectionAsker extends javax.swing.JFrame {
         initComponents();
         buttonGroup1.add(clientRadioButton);
         buttonGroup1.add(serverRadioButton);
+        addressText.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (addressText.getText().equals("localhost")) {
+                    addressText.setText("");
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (addressText.getText().isEmpty()) {
+                    addressText.setText("localhost");
+                }
+            }
+        });
     }
 
     /**

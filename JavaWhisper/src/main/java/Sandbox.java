@@ -158,7 +158,6 @@ public class Sandbox {
 //        testASCII();
 //        startClientAsServer(args);
 //        showIPAddress();
-
-        startGUIClientAsServer(args);
+//        startGUIClientAsServer(args);
     }
 }

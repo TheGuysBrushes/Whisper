@@ -55,7 +55,6 @@ public class Client {
         return receiver;
     }
     
-    
     /**
      * Generate both public and private key
      */
@@ -190,12 +189,10 @@ public class Client {
         boolean has_GUI= true;
         
         Client client;
-//        client = new Client(has_GUI);
         ConnectionAsker asker= new ConnectionAsker();
                 
         try {
             client= asker.getAConnectedClient(s_port);
-//            client.initConnection(address, s_port);
             client.startChat();
 //            client.stopChat();
 //            client.closeConnection();

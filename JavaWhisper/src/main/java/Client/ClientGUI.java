@@ -7,14 +7,19 @@ package Client;
 
 import MessageExchange.MessageReceiver;
 import MessageExchange.MessageDisplayer;
+import static MessageExchange.MessageDisplayer.DEFAULT_TEXT;
 import MessageExchange.MessageSender;
 import MessageExchange.MessageWriter;
 import MessageExchange.Whisper;
+import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import javax.swing.DropMode;
 import org.apache.log4j.Logger;
 
 /**
@@ -36,6 +41,8 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //        messages= new String[0];
         
         initComponents();
+//        messagesList.setDropMode(DropMode.INSERT);
+        initPlaceHolder();
     }
     
         
@@ -47,6 +54,37 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //        messages= new String[0];
         
         initComponents();
+//        messagesList.setDropMode(DropMode.INSERT);
+        initPlaceHolder();
+    }
+    
+    private void resetMessageField() {
+        if (messageField.hasFocus()) {
+            messageField.setForeground(Color.BLACK);
+            messageField.setText("");
+        } else {
+            messageField.setForeground(Color.GRAY);
+            messageField.setText(DEFAULT_TEXT);
+        }
+    }
+    
+    public void initPlaceHolder() {
+        messageField.setForeground(Color.GRAY);
+        messageField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (messageField.getText().equals(DEFAULT_TEXT)) {
+                    messageField.setText("");
+                    messageField.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (messageField.getText().isEmpty()) {
+                    resetMessageField();
+                }
+            }
+        });
     }
 
     /**
@@ -90,6 +128,11 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         messageField.setText(DEFAULT_TEXT);
         messageField.setToolTipText("");
+        messageField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                messageFieldActionPerformed(evt);
+            }
+        });
         messageField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 messageFieldKeyPressed(evt);
@@ -151,11 +194,11 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        messageField.setText(DEFAULT_TEXT);
+        resetMessageField();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        sendMessage();
+        if ( !(messageField.getText().isEmpty() || messageField.getText().equals(DEFAULT_TEXT)) ) sendMessage();
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void messageFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageFieldKeyTyped
@@ -173,6 +216,10 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void messageFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageFieldActionPerformed
+        if (messageField.getText().equals(DEFAULT_TEXT)) messageField.setText("");
+    }//GEN-LAST:event_messageFieldActionPerformed
 
     /**
      *
@@ -326,7 +373,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         try {
             sender.sendMessage(messageField.getText());
             addMessage("ME : " + messageField.getText());
-            messageField.setText(DEFAULT_TEXT);
+            resetMessageField();
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
         }
