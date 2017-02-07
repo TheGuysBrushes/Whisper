@@ -186,13 +186,16 @@ public class Client {
         } else {
             s_port = args[1];
         }
-
-        Whisper.setMyName("Alice");
+        
         boolean has_GUI= true;
-        Client client = new Client(has_GUI);
-
+        
+        Client client;
+//        client = new Client(has_GUI);
+        ConnectionAsker asker= new ConnectionAsker();
+                
         try {
-            client.initConnection(address, s_port);
+            client= asker.getAConnectedClient(s_port);
+//            client.initConnection(address, s_port);
             client.startChat();
 //            client.stopChat();
 //            client.closeConnection();
