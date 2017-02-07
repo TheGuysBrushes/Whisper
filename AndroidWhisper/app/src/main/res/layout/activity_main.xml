@@ -13,6 +13,7 @@
         android:layout_above="@+id/sendMsgLayout"
         android:layout_alignParentTop="true"
         android:overScrollMode="always"
+        android:transcriptMode="alwaysScroll"
         android:stackFromBottom="true"
         android:layout_margin="5sp"
         android:divider="@null"/>

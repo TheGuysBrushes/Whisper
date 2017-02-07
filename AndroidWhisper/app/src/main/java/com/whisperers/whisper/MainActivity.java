@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import MessageExchange.Whisper;
@@ -72,13 +73,20 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     }
 
     @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        TextView info = (TextView) v.findViewById(R.id.infoMsg);
+        int visibility = info.getVisibility();
+        if (visibility == View.VISIBLE)
+            info.setVisibility(View.GONE);
+        else
+            info.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onMessageReceived(Whisper whisper) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                chatAdapter.add(new Whisper(whisper));
-                chatAdapter.notifyDataSetChanged();
-            }
+        this.runOnUiThread(() -> {
+            chatAdapter.add(new Whisper(whisper));
+            chatAdapter.notifyDataSetChanged();
         });
         Log.d("WHISPER", "Message complete");
     }

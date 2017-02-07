@@ -12,5 +12,14 @@
             android:gravity="center_vertical"
             android:padding="10sp"
             android:background="@drawable/blue_radius"/>
+        <TextView
+            android:id="@+id/infoMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center_vertical"
+            android:text="infoMessage"
+            android:visibility="gone"
+            android:textColor="@android:color/tertiary_text_light"/>
 
 </LinearLayout>
