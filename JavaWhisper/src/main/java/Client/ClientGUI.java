@@ -19,7 +19,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import javax.swing.DropMode;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,47 +29,47 @@ import org.apache.log4j.Logger;
  */
 public class ClientGUI extends javax.swing.JFrame implements ActionListener, MessageDisplayer, MessageWriter {
     private final static Logger LOGGER = Logger.getLogger(ClientGUI.class);
-
+    
     private MessageSender sender;
-    private final String SENDER_NAME = "SENDER_NAME";
-    
-    /**
-     * Creates new form ClientGUI
-     * @param address : Address to connect to
-     * @param s_port : which port to use
-     */
-    public ClientGUI(String address, String s_port) {
-//        messages= new String[0];
-        
-        initComponents();
-//        messagesList.setDropMode(DropMode.INSERT);
-        initPlaceHolder();
-    }
-    
+    private String SENDER_NAME = "SENDER_NAME";
+    private String[] WELCOME_MESSAGES;
+    private boolean exchangeStarted;
         
     /**
-     * Creates new form ClientGUI
-//     * @param s_port : which port to use
+     * Creates a new chat window
+     * @param canStartChat : Defines if the Client is already connected to an
+     * host (and can send messages right now) or if it's waiting for connection
+     * (must wait for a client connection )
      */
-    public ClientGUI(/*String s_port*/) {
-//        messages= new String[0];
-        
-        initComponents();
-//        messagesList.setDropMode(DropMode.INSERT);
-        initPlaceHolder();
-    }
-    
-    private void resetMessageField() {
-        if (messageField.hasFocus()) {
-            messageField.setForeground(Color.BLACK);
-            messageField.setText("");
+    public ClientGUI(boolean canStartChat) {
+        exchangeStarted= canStartChat;
+
+        if (canStartChat) {
+            startConversation();
         } else {
-            messageField.setForeground(Color.GRAY);
-            messageField.setText(DEFAULT_TEXT);
+            InetAddress ip;
+            try {
+                ip = InetAddress.getLocalHost();
+                WELCOME_MESSAGES = new String[]{
+                    "<html><i>Attente de la connexion d'un contact</i></html>",
+                    "Adresse de connexion : " + ip.getHostAddress(),
+                    "======================"};
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                WELCOME_MESSAGES = new String[]{"<html><b style=\"color:#FF0000\";>Adresse inconnue<b><html>"};
+            }
+        }
+        
+        initComponents();
+//        messagesList.setDropMode(DropMode.INSERT);
+        initPlaceHolder();
+        
+        if (canStartChat) {
+            setLocation(getWidth(), 0);
         }
     }
     
-    public void initPlaceHolder() {
+    private void initPlaceHolder() {
         messageField.setForeground(Color.GRAY);
         messageField.addFocusListener(new FocusListener() {
             @Override
@@ -115,11 +116,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         tabPanel.setLayout(new java.awt.BorderLayout());
 
-        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Début de la conversation", "======================"};
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        resetMessages();
         messagesScrollPane.setViewportView(messagesList);
 
         tabPanel.add(messagesScrollPane, java.awt.BorderLayout.CENTER);
@@ -234,25 +231,111 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         }
     }
     
+    @Override
+    public void showMessage(String message) { 
+        addMessage(SENDER_NAME+ " : " + message);
+    }
+
+    @Override
+    public void showMessage(Whisper message)     {
+        if (message.hasBeenSendByMe()) {
+            addMessage("ME : " + message.getContent());
+        } else {
+            updateSenderName(message.getSenderName());
+            addMessage(message.toString());
+        }
+    }
+
+    @Override
+    public void setMessageSender(MessageSender msgSender) {
+        sender= msgSender;
+    }
+
+    @Override
+    public void startSending() {
+        setVisible(true);
+    }
+    
+
+    @Override
+    public void stopSending() {
+        setVisible(false);
+    }
+    
+    @Override
+    public void chatStarted() {
+        exchangeStarted= true;
+        startConversation();
+        resetMessages();
+    }
+    
+    private void resetMessageField() {
+        if (messageField.hasFocus()) {
+            messageField.setForeground(Color.BLACK);
+            messageField.setText("");
+        } else {
+            messageField.setForeground(Color.GRAY);
+            messageField.setText(DEFAULT_TEXT);
+        }
+    }
+    
+    private void resetMessages() {
+        setMessages(WELCOME_MESSAGES);
+    }
+    
+    private void startConversation() {
+        WELCOME_MESSAGES = new String[]{"Début de la conversation",
+            "======================"};
+    }
+    
+   private void setMessages(String[] messages) {
+        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = messages;
+            @Override
+            public int getSize() { return strings.length; }
+            @Override
+            public String getElementAt(int i) { return strings[i]; }
+        });
+   }
+        
+    private void addMessage(String message) {
+        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
+        String[] messages= new String[listModel.getSize() + 1];
+        
+        int i= 0;
+        for (; i < listModel.getSize(); ++i) {
+            messages[i]= listModel.getElementAt(i);
+        }
+        messages[i]= message;
+        
+        setMessages(messages);
+    }
+    
+    public void sendMessage() {
+        try {
+            if (exchangeStarted) {
+                sender.sendMessage(messageField.getText());
+                addMessage("ME : " + messageField.getText());
+                resetMessageField();
+            } else {
+                addMessage("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>");
+            }
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer le message" + e.getMessage());
+        }
+    }
+    
+    public void updateSenderName(String senderName) {
+        
+        SENDER_NAME= senderName;
+        jTabbedPane1.setTitleAt(jTabbedPane1.getSelectedIndex(), SENDER_NAME);
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-        String address;
-        if (args.length < 1) {
-            address = "localhost";
-        } else {
-            address = args[0];
-        }   
         //address = "192.168.99.107";
-
-        String s_port;
-        if (args.length < 2) {
-            s_port = "2000";
-        } else {
-            s_port = args[1];
-        }
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -280,7 +363,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new ClientGUI(address, s_port).setVisible(true);
+            new ClientGUI(false).setVisible(true);
             
 //                ClientGUI.client.stopChat();
 //                client.closeConnection();
@@ -304,78 +387,4 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 
-//    private void addMessage(Whisper message) {
-//        
-//    }
-    
-    @Override
-    public void showMessage(String message) { 
-        addMessage(SENDER_NAME+ " : " + message);
-        
-//        messagesList.add(new Component() {
-//})
-
-//        String[] new_messages= new String[messages.length +1];
-//        
-//        int i= 0;
-//        for (; i < messages.length; ++i) {
-//            new_messages[i]= messages[i];
-//        }
-//        messages= new_messages;
-//        messages[i]= message;
-    }
-
-    @Override
-    public void showMessage(Whisper message)     {
-        if (message.hasBeenSendByMe()) {
-            addMessage("ME : " + message.getContent());
-        } else {
-            addMessage(message.toString());
-        }
-    }
-
-    @Override
-    public void setMessageSender(MessageSender msgSender) {
-        sender= msgSender;
-    }
-
-    @Override
-    public void startSending() {
-        setVisible(true);
-    }
-    
-
-    @Override
-    public void stopSending() {
-        setVisible(false);
-    }
-        
-    private void addMessage(String message) {
-        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
-        String[] messages= new String[listModel.getSize() + 1];
-        
-        int i= 0;
-        for (; i < listModel.getSize(); ++i) {
-            messages[i]= listModel.getElementAt(i);
-        }
-        messages[i]= message;
-        
-        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = messages;
-            @Override
-            public int getSize() { return strings.length; }
-            @Override
-            public String getElementAt(int i) { return strings[i]; }
-        });
-    }
-    
-    public void sendMessage() {
-        try {
-            sender.sendMessage(messageField.getText());
-            addMessage("ME : " + messageField.getText());
-            resetMessageField();
-        } catch (IOException e) {
-            System.err.println("Impossible d'envoyer le message" + e.getMessage());
-        }
-    }
 }

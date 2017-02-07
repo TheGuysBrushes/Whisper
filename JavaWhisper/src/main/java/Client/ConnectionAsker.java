@@ -6,7 +6,6 @@
 package Client;
 
 import MessageExchange.Whisper;
-import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
@@ -17,14 +16,15 @@ import java.io.IOException;
  */
 public class ConnectionAsker extends javax.swing.JFrame {
     private boolean hasBeenValidated;
+    private boolean hasDefaultPseudo;
 
     /**
      * Creates new form ConnectionAsker
      */
     public ConnectionAsker() {
         initComponents();
-        buttonGroup1.add(clientRadioButton);
-        buttonGroup1.add(serverRadioButton);
+        hasDefaultPseudo= true;
+        
         addressText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -39,6 +39,10 @@ public class ConnectionAsker extends javax.swing.JFrame {
                 }
             }
         });
+        
+        buttonGroup1.add(clientRadioButton);
+        buttonGroup1.add(serverRadioButton);
+        serverRadioButton.doClick();
     }
 
     /**
@@ -53,11 +57,15 @@ public class ConnectionAsker extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        serverRadioButton = new javax.swing.JRadioButton();
+        clientRadioButton = new javax.swing.JRadioButton();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        pseudoField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         addressText = new javax.swing.JTextField();
-        serverRadioButton = new javax.swing.JRadioButton();
-        clientRadioButton = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -67,6 +75,55 @@ public class ConnectionAsker extends javax.swing.JFrame {
         jLabel1.setText("<html><b>Choisissez un mode de connexion</b></html>");
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        serverRadioButton.setText("Attendre une connexion");
+        serverRadioButton.setToolTipText("Serveur");
+        serverRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serverRadioButtonActionPerformed(evt);
+            }
+        });
+
+        clientRadioButton.setText("Se connecter");
+        clientRadioButton.setToolTipText("Client");
+        clientRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientRadioButtonActionPerformed(evt);
+            }
+        });
+
+        if (clientRadioButton.isSelected()) {
+            pseudoField.setText("Bob");
+        } else {
+            pseudoField.setText("Alice");
+        }
+        pseudoField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                pseudoFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel3.setText("Pseudonyme :");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pseudoField, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pseudoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         jLabel2.setText("Adresse :");
 
@@ -82,12 +139,12 @@ public class ConnectionAsker extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addressText, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(12, 12, 12))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,19 +156,29 @@ public class ConnectionAsker extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        serverRadioButton.setText("Serveur");
-        serverRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                serverRadioButtonActionPerformed(evt);
-            }
-        });
-
-        clientRadioButton.setText("Client");
-        clientRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clientRadioButtonActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -120,34 +187,33 @@ public class ConnectionAsker extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(25, 25, 25)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(clientRadioButton)
-                .addGap(18, 18, 18)
-                .addComponent(serverRadioButton)
-                .addGap(81, 81, 81))
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(clientRadioButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(serverRadioButton))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverRadioButton)
                     .addComponent(clientRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jButton1.setText("Valider");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -162,10 +228,16 @@ public class ConnectionAsker extends javax.swing.JFrame {
 
     private void serverRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverRadioButtonActionPerformed
         jPanel1.setVisible(false);
+        if (hasDefaultPseudo) {
+            pseudoField.setText("Bob");
+        }
     }//GEN-LAST:event_serverRadioButtonActionPerformed
 
     private void clientRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientRadioButtonActionPerformed
         jPanel1.setVisible(true);
+        if (hasDefaultPseudo) {
+            pseudoField.setText("Alice");
+        }
     }//GEN-LAST:event_clientRadioButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -174,8 +246,12 @@ public class ConnectionAsker extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void addressTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressTextActionPerformed
-        if (addressText.equals("localhost")) addressText.setText("");
+        if (addressText.getText().equals("localhost")) addressText.setText("");
     }//GEN-LAST:event_addressTextActionPerformed
+
+    private void pseudoFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pseudoFieldKeyTyped
+        hasDefaultPseudo= false;
+    }//GEN-LAST:event_pseudoFieldKeyTyped
 
     /**
      * @param args the command line arguments
@@ -194,18 +270,19 @@ public class ConnectionAsker extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, "Class non trouvée", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, "Erreur d'instanciation", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, "Accès illégal !", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConnectionAsker.class.getName()).log(java.util.logging.Level.SEVERE, "Les éléments d'interface ne sont pas supportés", ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new ConnectionAsker().setVisible(true);
             }
@@ -233,14 +310,16 @@ public class ConnectionAsker extends javax.swing.JFrame {
         
         // Client creation
         boolean hasGUI= true;
-        Client client= new Client(hasGUI);
-        if (clientRadioButton.isSelected()) {
-            client.initConnection(addressText.getText(), s_port);
-            Whisper.setMyName("Alice");
-        } else {
+        Client client;
+        if (serverRadioButton.isSelected()) {
+            client= new Client(hasGUI, false);
             client.initConnection(s_port);
-            Whisper.setMyName("Bob");
+        } else {
+            client= new Client(hasGUI, true);
+            client.initConnection(addressText.getText(), s_port);
         }
+        Whisper.setMyName(pseudoField.getText());
+        
         return client;
     }
 
@@ -251,8 +330,12 @@ public class ConnectionAsker extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField pseudoField;
     private javax.swing.JRadioButton serverRadioButton;
     // End of variables declaration//GEN-END:variables
 }

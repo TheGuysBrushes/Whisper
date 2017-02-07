@@ -30,4 +30,9 @@ public class TermDisplayer implements MessageExchange.MessageDisplayer{
         System.out.println(message);
         System.out.print(DEFAULT_TEXT);
     }
+
+    @Override
+    public void chatStarted() {
+        System.out.println("Vous pouvez démarrer la conversation...");
+    }
 }

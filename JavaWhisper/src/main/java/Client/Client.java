@@ -29,12 +29,12 @@ public class Client {
     final private MessageWriter msg_sender;
     private Thread msg_receiver;
 
-    public Client(boolean hasGUI) {
+    public Client(boolean hasGUI, boolean chatStarted) {
         sender= new MessageEncryptorSender();
         
         MessageDisplayer displayer;
         if (hasGUI) {
-            ClientGUI GUI= new ClientGUI(/*s_port*/);
+            ClientGUI GUI= new ClientGUI(chatStarted);
             GUI.setMessageSender(sender);
             GUI.setVisible(true);
             displayer= GUI;
