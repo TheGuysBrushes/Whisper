@@ -109,7 +109,7 @@ public class ComThread extends Thread {
             Log.e(TAG, "Erreur message", e);
         }
         try {
-            sleep(1000);
+            sleep(500);
         } catch (InterruptedException e) {
             Log.d(TAG, "Exception", e);
         }

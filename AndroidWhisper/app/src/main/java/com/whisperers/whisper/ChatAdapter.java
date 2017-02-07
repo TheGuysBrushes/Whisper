@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+
 import MessageExchange.Whisper;
 
 /**
@@ -31,9 +33,11 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.line_message, parent, false);
 
-
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
 
         TextView textMessage= (TextView)view.findViewById(R.id.textMsg);
+        TextView infoMessage= (TextView)view.findViewById(R.id.infoMsg);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         if (item != null) {
             textMessage.setText(item.getContent());
@@ -45,9 +49,11 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
             } else {
                 params.gravity = Gravity.LEFT;
                 textMessage.setLayoutParams(params);
+                infoMessage.setLayoutParams(params);
 
                 textMessage.setBackgroundResource(R.drawable.green_radius);
             }
+            infoMessage.setText(android.text.format.DateFormat.format("EEE d, hh:mm", item.getTime()));
         }
 
         textMessage.setTextColor(Color.WHITE);
