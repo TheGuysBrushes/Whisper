@@ -2,6 +2,8 @@ package MessageExchange;
 
 import Encryption.Encryptor;
 import Encryption.PrivateKey;
+import Encryption.PublicKey;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,28 +15,35 @@ public class Whisper implements Serializable {
     final private Date time;
     private String content;
     final private String sender_name;
-    private static String my_name; 
+    private static String my_name;
     private boolean completed;
     private int id;
-    
-    
+
 
     public Whisper(String message) {
-        content= message;
-        sender_name= my_name;
+        content = message;
+        sender_name = my_name;
         completed = false;
-        time= new Date();
+        time = new Date();
     }
 
     public Whisper(String message, String name) {
-        content= message;
-        sender_name= name;
+        content = message;
+        sender_name = name;
         completed = false;
-        time= new Date();
+        time = new Date();
     }
-    
+
+    public Whisper(Whisper other) {
+        this.time = other.time;
+        this.content = other.content;
+        this.sender_name = other.sender_name;
+        this.completed = other.completed;
+        this.id = other.id;
+    }
+
     public static void setMyName(String name) {
-        my_name= name;
+        my_name = name;
     }
 
     public Date getTime() {
@@ -64,17 +73,22 @@ public class Whisper implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getSenderName() {
         return sender_name;
     }
-    
+
     public void decrypt(Encryptor encryptor, PrivateKey decryptKey) {
-        content= encryptor.decrypt(content, decryptKey);
+        content = encryptor.decrypt(content, decryptKey);
     }
-    
+
+    public void encrypt(Encryptor encryptor, PublicKey encryptKey) {
+        content = encryptor.encryptToString(content, encryptKey);
+    }
+
+
     public String toString() {
         return sender_name + " : " + getContent();
     }
-    
+
 }

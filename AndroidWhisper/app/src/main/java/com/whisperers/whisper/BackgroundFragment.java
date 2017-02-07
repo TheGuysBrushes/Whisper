@@ -2,26 +2,39 @@ package com.whisperers.whisper;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.whisperers.whisper.thread.ComThread;
+
+import MessageExchange.Whisper;
 
 /**
  * Created by etudiant on 31/01/17.
  */
 
 public class BackgroundFragment extends Fragment {
+    private final static String TAG = "BACKGROUND_FRAGMENT";
+
+    private ChatAdapter adapter;
+
+    private ComThread comThread;
 
     private TaskCallBacks mMainActivityListener = null;
-    private ChatAdapter adapter;
-    private List<ComTask> threadList = new ArrayList<>();
 
+    interface TaskCallBacks {
+        void onMessageReceived(Whisper whisper);
+    }
 
-    public void sendNewMessage(Whisper whisper){
-        ComTask thread = new ComTask(this);
-        threadList.add(thread);
-        thread.execute(whisper);
+    public void sendNewMessage(Whisper whisper) {
+        adapter.add(new Whisper(whisper));
+        comThread.setMessage(whisper);
+    }
+
+    public void onMessageReceived(Whisper newWhisper) {
+        adapter.add(new Whisper(newWhisper));
+        if (mMainActivityListener != null) mMainActivityListener.onMessageReceived(newWhisper);
     }
 
     public ChatAdapter getAdapter() {
@@ -33,28 +46,45 @@ public class BackgroundFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mMainActivityListener = (TaskCallBacks) activity;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        comThread = new ComThread(this);
+        comThread.start();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         this.mMainActivityListener = null;
+        try {
+            comThread.join();
+        } catch (InterruptedException e) {
+            Log.d(TAG, "Exception", e);
+        }
     }
 
-    protected void onPostExecute (Whisper whisper){
-        if (mMainActivityListener != null) mMainActivityListener.onItemDone(whisper);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            mMainActivityListener = (TaskCallBacks) context;
+        }
     }
 
-    static interface TaskCallBacks {
-        public void onItemDone(Whisper whisper);
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            comThread.pauseThread();
+        } catch (InterruptedException e) {
+            Log.d(TAG, "Exception", e);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        comThread.resumeThread();
     }
 }
