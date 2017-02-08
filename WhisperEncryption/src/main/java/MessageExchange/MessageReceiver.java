@@ -38,6 +38,7 @@ public class MessageReceiver implements Runnable {
         // Création du stream d'entrée
         try {
             inS = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            displayer.chatStarted();
         } catch (SocketException e) {
             LOGGER.debug("SocketException", e);
         } catch (UnknownHostException e) {

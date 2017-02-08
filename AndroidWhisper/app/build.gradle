@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.whisperers.whisper"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,11 +26,19 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs '../WhisperEncryption'
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+//    compile files('../WhisperEncryption/target/WhisperEncryption-1.0-SNAPSHOT.jar')
     testCompile 'junit:junit:4.12'
+
 }

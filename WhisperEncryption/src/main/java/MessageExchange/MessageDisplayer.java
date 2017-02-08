@@ -16,5 +16,6 @@ public interface MessageDisplayer{
     
     public void showMessage(String message);
     public void showMessage(Whisper message);
+    public void chatStarted();
 
 }
