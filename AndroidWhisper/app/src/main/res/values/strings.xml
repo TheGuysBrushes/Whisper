@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Whisper</string>
+    <string name="title_activity_paramater">Paramètres de connexion</string>
+    <string name="address">Adresse IP (localhost par défaut)</string>
+    <string name="action_connection">Se connecter</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="error_invalid_address">Adresse IP incorrecte</string>
+    <string name="error_field_required">Champ obligatoire</string>
 </resources>

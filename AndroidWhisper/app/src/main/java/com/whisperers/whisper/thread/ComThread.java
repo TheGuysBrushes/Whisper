@@ -1,5 +1,7 @@
 package com.whisperers.whisper.thread;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.whisperers.whisper.BackgroundFragment;
@@ -24,7 +26,7 @@ import MessageExchange.Whisper;
  * Created by etudiant on 02/02/17.
  */
 
-public class ComThread extends Thread {
+public class ComThread extends Thread implements Parcelable{
     private final String TAG = "THREAD_SENDER";
     final private Encryptor encryptor;
 
@@ -38,19 +40,23 @@ public class ComThread extends Thread {
 
     private Whisper messageToSend;
     private Whisper messageReceived;
+
     private Socket socket;
     String address = "192.168.43.78";
     int port = 2000;
+
+    private boolean connected = false;
 
     private volatile boolean running = true; // Run unless told to pause
 
     BackgroundFragment fragment;
 
-    public ComThread(BackgroundFragment fragment) {
+    public ComThread(BackgroundFragment fragment, String address) {
         encryptor = new RSAEncryptor();
         messageToSend = null;
         messageReceived = null;
         this.fragment = fragment;
+        this.address = address;
         Log.i(TAG, "Création thread communication");
     }
 
@@ -77,6 +83,8 @@ public class ComThread extends Thread {
         } catch (IOException | ClassNotFoundException e) {
             Log.e(TAG, "Echec envoi clé", e);
         }
+
+        connected = true;
 
         do {
             while (!running)
@@ -194,5 +202,19 @@ public class ComThread extends Thread {
 
     public void resumeThread() {
         running = true;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

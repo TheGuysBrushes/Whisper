@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.whisperers.whisper.thread.ComThread;
 
+import java.net.Socket;
+
 import MessageExchange.Whisper;
 
 /**
@@ -23,6 +25,8 @@ public class BackgroundFragment extends Fragment {
 
     private TaskCallBacks mMainActivityListener = null;
 
+    private String address;
+
     interface TaskCallBacks {
         void onMessageReceived(Whisper whisper);
     }
@@ -31,6 +35,7 @@ public class BackgroundFragment extends Fragment {
         adapter.add(new Whisper(whisper));
         comThread.setMessage(whisper);
     }
+
 
     public void onMessageReceived(Whisper newWhisper) {
         adapter.add(new Whisper(newWhisper));
@@ -45,12 +50,27 @@ public class BackgroundFragment extends Fragment {
         this.adapter = adapter;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setmMainActivityListener(TaskCallBacks mMainActivityListener) {
+        this.mMainActivityListener = mMainActivityListener;
+    }
+
+   public boolean isConnected(){
+       return comThread.isConnected();
+   }
+
+    public void runFragment(){
+        comThread = new ComThread(this, address);
+        comThread.start();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        comThread = new ComThread(this);
-        comThread.start();
     }
 
     @Override
@@ -67,9 +87,6 @@ public class BackgroundFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Activity) {
-            mMainActivityListener = (TaskCallBacks) context;
-        }
     }
 
     @Override

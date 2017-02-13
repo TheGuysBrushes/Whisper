@@ -4,27 +4,32 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
-import android.app.ListActivity;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+
 import android.os.AsyncTask;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import MessageExchange.Whisper;
+/**
+ * A parameter screen that offers connection with username and IP address.
+ */
+public class ParameterActivity extends AppCompatActivity {
+    private final static String TAG = "PARAMETER_ACTIVITY";
 
-public class MainActivity extends ListActivity implements BackgroundFragment.TaskCallBacks {
-    private ChatAdapter chatAdapter;
-
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -36,56 +41,44 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     private BackgroundFragment mTaskFragment;
     private static final String TAG_TASKS_FRAGMENT = "TASK_FRAGMENT";
 
-    private final static String TAG = "MAIN_ACTIVITY";
-
-    private String username;
-    private boolean isParameterView = true;
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        //Save the fragment's instance
-        getFragmentManager().putFragment(outState, TAG_TASKS_FRAGMENT, mTaskFragment);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_parameter);
 
-        if (!isParameterView){
-            setNewView(savedInstanceState);
-        }else{
-            setContentView(R.layout.activity_parameter);
+        mUsernameView = (EditText) findViewById(R.id.username);
 
-            mUsernameView = (EditText) findViewById(R.id.username);
-
-            mAddressView = (EditText) findViewById(R.id.address);
-            mAddressView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                        attemptConnection();
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            Button mEmailSignInButton = (Button) findViewById(R.id.connection_button);
-            mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        mAddressView = (EditText) findViewById(R.id.address);
+        mAddressView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     attemptConnection();
+                    return true;
                 }
-            });
+                return false;
+            }
+        });
 
-            mLoginFormView = findViewById(R.id.login_form);
-            mProgressView = findViewById(R.id.login_progress);
-        }
+        Button mEmailSignInButton = (Button) findViewById(R.id.connection_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptConnection();
+            }
+        });
+
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+
     }
 
+
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
     private void attemptConnection() {
         if (mAuthTask != null) {
             return;
@@ -96,21 +89,21 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         mAddressView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
-        String address = mAddressView.getText().toString();
+        String email = mUsernameView.getText().toString();
+        String password = mAddressView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(address)) {
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mAddressView.setError(getString(R.string.error_invalid_address));
             focusView = mAddressView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(username)) {
+        if (TextUtils.isEmpty(email)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
@@ -124,70 +117,19 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, address, this);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
     }
 
-    public void setNewView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-
-        FragmentManager fm = getFragmentManager();
-        if (savedInstanceState != null) {
-            mTaskFragment = (BackgroundFragment) fm.getFragment(savedInstanceState, TAG_TASKS_FRAGMENT);
-        }
-        chatAdapter = new ChatAdapter(this);
-
-        if (mTaskFragment.getAdapter() != null) {
-            populate();
-        } else {
-            mTaskFragment.setAdapter(new ChatAdapter(this));
-        }
-        mTaskFragment.setmMainActivityListener(this);
-
-        Whisper.setMyName(username);
-
-        setListAdapter(chatAdapter);
-        TextView texte = (TextView) findViewById(R.id.messageText);
-
-        ImageView imageSend = (ImageView) findViewById(R.id.imageSend);
-        imageSend.setOnClickListener((View v) -> {
-            Log.d("WHISPER", "Click send button");
-            String message = texte.getText().toString();
-            texte.setText("");
-            Whisper whisper = new Whisper(message);
-            chatAdapter.add(new Whisper(whisper));
-            chatAdapter.notifyDataSetChanged();
-            mTaskFragment.sendNewMessage(whisper);
-        });
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
     }
 
-    private void populate() {
-        int i;
-        for (i = 0; i < mTaskFragment.getAdapter().getCount(); ++i) {
-            chatAdapter.add(mTaskFragment.getAdapter().getItem(i));
-        }
-    }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        TextView info = (TextView) v.findViewById(R.id.infoMsg);
-        int visibility = info.getVisibility();
-        if (visibility == View.VISIBLE)
-            info.setVisibility(View.GONE);
-        else
-            info.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onMessageReceived(Whisper whisper) {
-        this.runOnUiThread(() -> {
-            chatAdapter.add(new Whisper(whisper));
-            chatAdapter.notifyDataSetChanged();
-        });
-        Log.d("WHISPER", "Message complete");
-    }
-
+    /**
+     * Shows the progress UI and hides the login form.
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -221,13 +163,6 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         }
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setParameterView(boolean parameterView) {
-        isParameterView = parameterView;
-    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -237,9 +172,9 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
 
         private final String mUsername;
         private final String mAddress;
-        private MainActivity activity;
+        private ParameterActivity activity;
 
-        UserLoginTask(String username, String address, MainActivity parent) {
+        UserLoginTask(String username, String address, ParameterActivity parent) {
             mUsername = username;
             mAddress = address;
             activity = parent;
@@ -271,9 +206,9 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             showProgress(false);
 
             if (success) {
-                activity.setUsername(mUsername);
-                activity.setParameterView(false);
-                activity.onCreate();
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.putExtra("username",mUsername);
+                startActivity(intent);
             } else {
                 mAddressView.setError(getString(R.string.error_invalid_address));
                 mAddressView.requestFocus();
