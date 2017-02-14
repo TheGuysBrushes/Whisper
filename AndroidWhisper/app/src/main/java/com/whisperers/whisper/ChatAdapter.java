@@ -33,8 +33,6 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.line_message, parent, false);
 
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
-
         TextView textMessage= (TextView)view.findViewById(R.id.textMsg);
         TextView infoMessage= (TextView)view.findViewById(R.id.infoMsg);
 
@@ -43,11 +41,13 @@ public class ChatAdapter extends ArrayAdapter<Whisper> {
             textMessage.setText(item.getContent());
             if (item.hasBeenSendByMe()) {
                 params.gravity = Gravity.RIGHT;
+                params.setMargins(150,0,0,0);
                 textMessage.setLayoutParams(params);
 
                 textMessage.setBackgroundResource(R.drawable.blue_radius);
             } else {
                 params.gravity = Gravity.LEFT;
+                params.setMargins(0,0,150,0);
                 textMessage.setLayoutParams(params);
                 infoMessage.setLayoutParams(params);
 

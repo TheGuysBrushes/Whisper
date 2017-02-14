@@ -44,6 +44,8 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("isParameterView",isParameterView);
+        outState.putString("username",username);
         super.onSaveInstanceState(outState);
 
         //Save the fragment's instance
@@ -54,9 +56,16 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!isParameterView){
+        if (savedInstanceState != null) {
+            isParameterView = savedInstanceState.getBoolean("isParameterView");
+            username = savedInstanceState.getString("username");
+        }
+
+        Log.i(TAG, "onCreate: creation de l'activité : " + isParameterView);
+
+        if (!isParameterView) {
             setNewView(savedInstanceState);
-        }else{
+        } else {
             setContentView(R.layout.activity_parameter);
 
             mUsernameView = (EditText) findViewById(R.id.username);
@@ -103,7 +112,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(address)) {
             mAddressView.setError(getString(R.string.error_invalid_address));
             focusView = mAddressView;
             cancel = true;
@@ -229,6 +238,25 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         isParameterView = parameterView;
     }
 
+    public void onConnectionDone(boolean success, String username) {
+        if (success) {
+            this.setUsername(username);
+            this.setParameterView(false);
+            this.recreate();
+        } else {
+            mAddressView.setError(getString(R.string.error_invalid_address));
+            mAddressView.requestFocus();
+        }
+    }
+
+    public void registerFragment(String mAddress){
+        FragmentManager fm = getFragmentManager();
+        mTaskFragment = new BackgroundFragment();
+        mTaskFragment.setAddress(mAddress);
+        mTaskFragment.runFragment();
+        fm.beginTransaction().add(mTaskFragment, TAG_TASKS_FRAGMENT).commit();
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -247,21 +275,13 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            FragmentManager fm = getFragmentManager();
-            mTaskFragment = new BackgroundFragment();
-            mTaskFragment.setAddress(mAddress);
-            mTaskFragment.runFragment();
-            fm.beginTransaction().add(mTaskFragment, TAG_TASKS_FRAGMENT).commit();
+            activity.registerFragment(mAddress);
 
-            while (!mTaskFragment.isConnected()){
-                Log.i(TAG, "doInBackground: "+mTaskFragment.isConnected());
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    Log.d(TAG,e.getMessage());
-                }
-            }
+            do {
+                Log.i(TAG, "doInBackground: " + mTaskFragment.isConnected());
+            } while (!mTaskFragment.isConnected());
 
+            Log.i(TAG, "doInBackground: tache terminée : " + mTaskFragment.isConnected());
             return true;
         }
 
@@ -269,15 +289,9 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
+            Log.i(TAG, "onPostExecute: ");
 
-            if (success) {
-                activity.setUsername(mUsername);
-                activity.setParameterView(false);
-                activity.onCreate();
-            } else {
-                mAddressView.setError(getString(R.string.error_invalid_address));
-                mAddressView.requestFocus();
-            }
+            activity.onConnectionDone(success,mUsername);
         }
 
         @Override

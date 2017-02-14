@@ -26,7 +26,7 @@ import MessageExchange.Whisper;
  * Created by etudiant on 02/02/17.
  */
 
-public class ComThread extends Thread implements Parcelable{
+public class ComThread extends Thread {
     private final String TAG = "THREAD_SENDER";
     final private Encryptor encryptor;
 
@@ -71,13 +71,11 @@ public class ComThread extends Thread implements Parcelable{
             socket = new Socket(InetAddress.getByName(address), port);
 
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            Log.d(TAG, "object output stream " + outS);
             sendKey(sharablePublicKey);
             Log.d(TAG, "Public key sent");
 
             inS = new BufferedInputStream(socket.getInputStream());
             oinS = new ObjectInputStream(inS);
-            Log.d(TAG, "object input stream " + oinS);
             receiveKey();
             Log.d(TAG, "Public key received");
         } catch (IOException | ClassNotFoundException e) {
@@ -85,6 +83,7 @@ public class ComThread extends Thread implements Parcelable{
         }
 
         connected = true;
+        Log.i(TAG, "run: Socket connecté et clés échangées");
 
         do {
             while (!running)
@@ -208,13 +207,4 @@ public class ComThread extends Thread implements Parcelable{
         return connected;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
-    }
 }

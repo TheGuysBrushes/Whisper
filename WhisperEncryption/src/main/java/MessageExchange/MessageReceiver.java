@@ -81,7 +81,7 @@ public class MessageReceiver implements Runnable {
 //                ActionEvent messageReceivedEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, message);
                 
             } catch (IOException e) {
-                LOGGER.error("Exception : "+ e);
+                LOGGER.error("Exception : "+ e.getMessage());
             }
         } while (! message.equals("quit"));
     }

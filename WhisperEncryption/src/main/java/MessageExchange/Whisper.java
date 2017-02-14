@@ -12,7 +12,9 @@ import java.util.Date;
  */
 
 public class Whisper implements Serializable {
-    public final static String SYSTEM = "SYS";
+    private static final long serialVersionUID = 3487495895819393L;
+
+    public final String SYSTEM = "SYS";
     final private Date time;
     private String content;
     final private String sender_name;
@@ -77,6 +79,10 @@ public class Whisper implements Serializable {
 
     public String getSenderName() {
         return sender_name;
+    }
+
+    public String getSYSTEM() {
+        return SYSTEM;
     }
 
     public void decrypt(Encryptor encryptor, PrivateKey decryptKey) {

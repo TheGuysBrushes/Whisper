@@ -390,7 +390,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private void resetMessages() {
         Whisper[] whispers = new Whisper[WELCOME_MESSAGES.length];
         for (int i= 0; i < WELCOME_MESSAGES.length; ++i) {
-            whispers[i]= new Whisper(WELCOME_MESSAGES[i], Whisper.SYSTEM);
+            whispers[i]= new Whisper(WELCOME_MESSAGES[i], new Whisper("bl").getSYSTEM());
         }
         setMessages(whispers);
     }
@@ -431,7 +431,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
                 addMessage(whisp);
                 resetMessageField();
             } else {
-                addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", Whisper.SYSTEM));
+                addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", new Whisper("bl").getSYSTEM()));
             }
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
