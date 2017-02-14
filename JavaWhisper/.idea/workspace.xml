@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="16b7ef5b-da2c-4ca3-a58b-0dcfe92a22bf" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Client/ClientGUI.java" afterPath="$PROJECT_DIR$/src/main/java/Client/ClientGUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../WhisperEncryption/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />

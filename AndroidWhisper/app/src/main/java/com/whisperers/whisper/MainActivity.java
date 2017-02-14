@@ -240,8 +240,9 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         isParameterView = parameterView;
     }
 
-    public void onConnectionDone(boolean success, String username) {
+    public void onConnectionDone(boolean success, String username, String mAddress) {
         if (success) {
+            registerFragment(mAddress);
             this.setUsername(username);
             this.setParameterView(false);
             this.recreate();
@@ -253,9 +254,6 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
 
     public void registerFragment(String mAddress){
         FragmentManager fm = getFragmentManager();
-        mTaskFragment = new BackgroundFragment();
-        mTaskFragment.setAddress(mAddress);
-        mTaskFragment.runFragment();
         fm.beginTransaction().add(mTaskFragment, TAG_TASKS_FRAGMENT).commit();
     }
 
@@ -277,10 +275,22 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            activity.registerFragment(mAddress);
+            mTaskFragment = new BackgroundFragment();
+            mTaskFragment.setAddress(mAddress);
+            mTaskFragment.runFragment();
+
+            int timeout = 15;
 
             do {
-                Log.i(TAG, "doInBackground: " + mTaskFragment.isConnected());
+                try {
+                    timeout--;
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "doInBackground: ",e );
+                }
+                if (timeout == 0) {
+                    return false;
+                }
             } while (!mTaskFragment.isConnected());
 
             Log.i(TAG, "doInBackground: tache terminée : " + mTaskFragment.isConnected());
@@ -293,7 +303,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             showProgress(false);
             Log.i(TAG, "onPostExecute: ");
 
-            activity.onConnectionDone(success,mUsername);
+            activity.onConnectionDone(success,mUsername,mAddress);
         }
 
         @Override

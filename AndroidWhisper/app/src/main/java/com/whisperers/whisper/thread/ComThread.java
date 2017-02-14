@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
 
 import Encryption.Encryptor;
@@ -69,7 +70,17 @@ public class ComThread extends Thread {
         generateKeys();
         try {
             socket = new Socket(InetAddress.getByName(address), port);
+        } catch (IOException e) {
+            Log.e(TAG, "Echec connexion socket", e);
+            try {
+                this.join();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            return;
+        }
 
+        try {
             outS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             sendKey(sharablePublicKey);
             Log.d(TAG, "Public key sent");
@@ -79,7 +90,7 @@ public class ComThread extends Thread {
             receiveKey();
             Log.d(TAG, "Public key received");
         } catch (IOException | ClassNotFoundException e) {
-            Log.e(TAG, "Echec envoi clé", e);
+            Log.e(TAG, "Echec envoi clés", e);
         }
 
         connected = true;
@@ -96,7 +107,7 @@ public class ComThread extends Thread {
         if (messageToSend != null) {
             Log.i(TAG, "Envoi du message : " + messageToSend);
             try {
-                Log.i(TAG, "sendReceiveMessage: "+messageToSend.toString());
+                Log.i(TAG, "sendReceiveMessage: " + messageToSend.toString());
                 sendMessage();
             } catch (IOException e) {
                 Log.e(TAG, "run: ", e);
@@ -107,7 +118,7 @@ public class ComThread extends Thread {
             if (inS.available() > 1) {
                 messageReceived = (Whisper) oinS.readObject();
                 if (messageReceived != null) {
-                    Log.i(TAG, "sendReceiveMessage: "+messageReceived.toString());
+                    Log.i(TAG, "sendReceiveMessage: " + messageReceived.toString());
                     messageReceived.decrypt(encryptor, myPrivateKey);
                     fragment.onMessageReceived(messageReceived);
                 }
