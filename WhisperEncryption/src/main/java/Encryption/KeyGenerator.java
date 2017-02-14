@@ -18,6 +18,7 @@ import java.util.Random;
  */
 public class KeyGenerator {
    // private final static Logger logger = Logger.getLogger(KeyGenerator.class);
+    private final static int KEY_SIZE= 1024;
 
     private BigInteger n;
     private BigInteger m;
@@ -34,8 +35,8 @@ public class KeyGenerator {
         Random rand = new Random();
 
         // p and q definition
-        BigInteger p = BigInteger.probablePrime(256, rand);
-        BigInteger q = BigInteger.probablePrime(256, rand);
+        BigInteger p = BigInteger.probablePrime(KEY_SIZE, rand);
+        BigInteger q = BigInteger.probablePrime(KEY_SIZE, rand);
 
         // n definition
         n = p.multiply(q);

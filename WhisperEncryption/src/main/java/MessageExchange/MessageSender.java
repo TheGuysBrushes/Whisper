@@ -53,7 +53,7 @@ public class MessageSender {
      * @throws IOException
      */
     public void sendMessage(Whisper whisp) throws IOException {
-//        outS.writeObject(message);
+        LOGGER.info("Envoi du message : "+ whisp.getContent());
         outS.writeObject(whisp);
         outS.flush();
     }

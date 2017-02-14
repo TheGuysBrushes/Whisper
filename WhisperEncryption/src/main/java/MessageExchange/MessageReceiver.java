@@ -57,8 +57,8 @@ public class MessageReceiver implements Runnable {
     
         try {
             // Réception de la réponse
-//            String response = (String) inS.readObject();
             Whisper response = (Whisper) inS.readObject();
+            LOGGER.info("Réception du message : "+ response.getContent());
 
             return response;
         } catch (ClassNotFoundException e) {
@@ -81,7 +81,7 @@ public class MessageReceiver implements Runnable {
 //                ActionEvent messageReceivedEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, message);
                 
             } catch (IOException e) {
-                LOGGER.error("Exception : "+ e.getMessage());
+                LOGGER.error("Exception : "+ e);
             }
         } while (! message.equals("quit"));
     }
