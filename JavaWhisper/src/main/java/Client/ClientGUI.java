@@ -410,7 +410,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private void resetMessages() {
         Whisper[] whispers = new Whisper[WELCOME_MESSAGES.length];
         for (int i= 0; i < WELCOME_MESSAGES.length; ++i) {
-            whispers[i]= new Whisper(WELCOME_MESSAGES[i], new Whisper("bl").getSYSTEM());
+            whispers[i]= new Whisper(WELCOME_MESSAGES[i], Whisper.getSYSTEM());
         }
         setMessages(whispers);
     }
@@ -451,7 +451,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
                 addMessage(whisp);
                 resetMessageField();
             } else {
-                addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", new Whisper("bl").getSYSTEM()));
+                addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", Whisper.getSYSTEM()));
             }
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
@@ -467,9 +467,9 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
                         Whisper whisp= new Whisper(lastReceived);
                         addMessage(whisp);
                         lastReceived= "";
-                    } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous avez déjà renvoyé le dernier message reçu</i></html>", new Whisper("bl").getSYSTEM()));
-                } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous n'avez pas encore reçu de message</i></html>", new Whisper("bl").getSYSTEM()));
-            } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", new Whisper("bl").getSYSTEM()));
+                    } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous avez déjà renvoyé le dernier message reçu</i></html>", Whisper.getSYSTEM()));
+                } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous n'avez pas encore reçu de message</i></html>", Whisper.getSYSTEM()));
+            } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", Whisper.getSYSTEM()));
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
         }

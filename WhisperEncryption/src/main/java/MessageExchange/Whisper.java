@@ -81,8 +81,8 @@ public class Whisper implements Serializable {
         return sender_name;
     }
 
-    public String getSYSTEM() {
-        return SYSTEM;
+    public static String getSYSTEM() {
+        return "SYS";
     }
 
     public void decrypt(Encryptor encryptor, PrivateKey decryptKey) {
