@@ -18,12 +18,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
+import javax.swing.JList;
+import javax.swing.ListModel;
 import org.apache.log4j.Logger;
 
 /**
@@ -164,6 +170,19 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         tabPanel.setLayout(new java.awt.BorderLayout());
 
         resetMessages();
+        messagesList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                messagesListMouseDragged(evt);
+            }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                messagesListMouseMoved(evt);
+            }
+        });
+        messagesList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                messagesListMouseClicked(evt);
+            }
+        });
         messagesScrollPane.setViewportView(messagesList);
 
         tabPanel.add(messagesScrollPane, java.awt.BorderLayout.CENTER);
@@ -171,7 +190,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         messagePanel.setLayout(new java.awt.BorderLayout());
 
         messageField.setText(DEFAULT_TEXT);
-        messageField.setToolTipText("");
+        messageField.setToolTipText("Message à envoyer");
         messageField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 messageFieldActionPerformed(evt);
@@ -265,6 +284,29 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         if (messageField.getText().equals(DEFAULT_TEXT)) messageField.setText("");
     }//GEN-LAST:event_messageFieldActionPerformed
 
+    private void messagesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messagesListMouseClicked
+        Whisper whisp= (Whisper)messagesList.getSelectedValue();
+        SimpleDateFormat formatter = new SimpleDateFormat("H:mm");
+        
+        messagesList.setToolTipText(formatter.format(whisp.getTime()));
+    }//GEN-LAST:event_messagesListMouseClicked
+
+    private void messagesListMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messagesListMouseMoved
+        ListModel m = messagesList.getModel();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("H:mm");
+
+        int index = messagesList.locationToIndex(evt.getPoint());
+        Date date= ((Whisper)m.getElementAt(index)).getTime();
+        if( index>-1 ) {
+            messagesList.setToolTipText(formatter.format(date));
+        }
+    }//GEN-LAST:event_messagesListMouseMoved
+
+    private void messagesListMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messagesListMouseDragged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_messagesListMouseDragged
+
     /**
      *
      * @param e
@@ -279,17 +321,17 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     }
     
     @Override
-    public void showMessage(String message) { 
-        addMessage(SENDER_NAME+ " : " + message);
+    public void showMessage(String message) {
+        addMessage(new Whisper(message));
     }
 
     @Override
     public void showMessage(Whisper message)     {
         if (message.hasBeenSendByMe()) {
-            addMessage("ME : " + message.getContent());
+            addMessage(message);
         } else {
             updateSenderName(message.getSenderName());
-            addMessage(message.toString());
+            addMessage(message);
         }
     }
 
@@ -327,7 +369,11 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     }
     
     private void resetMessages() {
-        setMessages(WELCOME_MESSAGES);
+        Whisper[] whispers = new Whisper[WELCOME_MESSAGES.length];
+        for (int i= 0; i < WELCOME_MESSAGES.length; ++i) {
+            whispers[i]= new Whisper(WELCOME_MESSAGES[i], Whisper.SYSTEM);
+        }
+        setMessages(whispers);
     }
     
     private void startConversation() {
@@ -335,19 +381,19 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
             "======================"};
     }
     
-   private void setMessages(String[] messages) {
-        messagesList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = messages;
+   private void setMessages(Whisper[] messages) {
+        messagesList.setModel(new javax.swing.AbstractListModel<Whisper>() {
+            Whisper[] strings = messages;
             @Override
             public int getSize() { return strings.length; }
             @Override
-            public String getElementAt(int i) { return strings[i]; }
+            public Whisper getElementAt(int i) { return strings[i]; }
         });
    }
         
-    private void addMessage(String message) {
-        javax.swing.AbstractListModel<String> listModel = (javax.swing.AbstractListModel<String>)messagesList.getModel();
-        String[] messages= new String[listModel.getSize() + 1];
+    private void addMessage(Whisper message) {
+        javax.swing.AbstractListModel<Whisper> listModel = (javax.swing.AbstractListModel<Whisper>)messagesList.getModel();
+        Whisper[] messages= new Whisper[listModel.getSize() + 1];
         
         int i= 0;
         for (; i < listModel.getSize(); ++i) {
@@ -361,11 +407,12 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     public void sendMessage() {
         try {
             if (exchangeStarted) {
+                Whisper whisp= new Whisper(messageField.getText());
                 sender.sendMessage(messageField.getText());
-                addMessage("ME : " + messageField.getText());
+                addMessage(whisp);
                 resetMessageField();
             } else {
-                addMessage("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>");
+                addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", Whisper.SYSTEM));
             }
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer le message" + e.getMessage());
@@ -428,7 +475,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField messageField;
     private javax.swing.JPanel messagePanel;
-    private javax.swing.JList<String> messagesList;
+    private javax.swing.JList<Whisper> messagesList;
     private javax.swing.JScrollPane messagesScrollPane;
     private javax.swing.JButton sendButton;
     private javax.swing.JPanel tabPanel;

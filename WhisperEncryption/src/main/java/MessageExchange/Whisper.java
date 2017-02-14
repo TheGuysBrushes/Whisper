@@ -12,6 +12,7 @@ import java.util.Date;
  */
 
 public class Whisper implements Serializable {
+    public final static String SYSTEM = "SYS";
     final private Date time;
     private String content;
     final private String sender_name;
@@ -88,7 +89,10 @@ public class Whisper implements Serializable {
 
 
     public String toString() {
-        return sender_name + " : " + getContent();
+        if (sender_name.equals(SYSTEM)) {
+            return getContent();
+        }
+        else return sender_name + " : " + getContent();
     }
 
 }

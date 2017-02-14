@@ -44,9 +44,17 @@ public class MessageSender {
      */
     public void sendMessage(String message) throws IOException {
         Whisper whisp= new Whisper(message);
+        sendMessage(whisp);
+    }
+    
+    /**
+     * Encrypt and send a message to the server
+     * @param whisp : message to send
+     * @throws IOException
+     */
+    public void sendMessage(Whisper whisp) throws IOException {
 //        outS.writeObject(message);
         outS.writeObject(whisp);
         outS.flush();
     }
-
 }
