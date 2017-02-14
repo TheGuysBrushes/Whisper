@@ -18,17 +18,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-import javax.swing.JList;
 import javax.swing.ListModel;
 import org.apache.log4j.Logger;
 
@@ -56,34 +52,8 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         if (canStartChat) {
             startConversation();
         } else {
-            try {
-                InetAddress ip= InetAddress.getLocalHost();
-
-                WELCOME_MESSAGES = new String[]{
-                    "<html><i>Attente de la connexion d'un contact</i></html>",
-                    "<html>Adresse de connexion : <u>" + ip.getHostAddress() + "</u> ("+ ip.getHostName() + ")</html>",
-                    "======================"};
-                
-                InetAddress[] ips = InetAddress.getAllByName(ip.getCanonicalHostName());
-                if (ips  != null ) {
-                    for (InetAddress ip1 : ips) {
-                        if (ip1.isSiteLocalAddress()) {
-                            String[] tmpWELCOME_MESSAGES = WELCOME_MESSAGES;
-                            WELCOME_MESSAGES = new String[WELCOME_MESSAGES.length +1];
-                            System.arraycopy(tmpWELCOME_MESSAGES, 0, WELCOME_MESSAGES, 0, tmpWELCOME_MESSAGES.length);
-                            WELCOME_MESSAGES[WELCOME_MESSAGES.length-1]= "<html>Adresse : <u>" + ip1.getHostAddress() + "</u></html>";
-                        }
-                    }
-                }
-                
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-                String[] tmpWELCOME_MESSAGES = WELCOME_MESSAGES;
-                WELCOME_MESSAGES = new String[WELCOME_MESSAGES.length +1];
-                System.arraycopy(tmpWELCOME_MESSAGES, 0, WELCOME_MESSAGES, 0, tmpWELCOME_MESSAGES.length);
-                WELCOME_MESSAGES[WELCOME_MESSAGES.length-1]= "<html><b style=\"color:#FF0000\";>Impossible de trouver l'hôte canonique<b><html>";
-            }
-            
+            WELCOME_MESSAGES = new String[]{
+                "<html><i>Attente de la connexion d'un contact</i></html>"};
             try {
                 Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
                 for (; n.hasMoreElements();)
@@ -95,21 +65,19 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
                     {
                         InetAddress addr = a.nextElement();
                         
-                        if (addr.isSiteLocalAddress()) {
+                        if (addr.isSiteLocalAddress() && !addr.getHostAddress().endsWith(".0.1")) {
                             String[] tmpWELCOME_MESSAGES = WELCOME_MESSAGES;
                             WELCOME_MESSAGES = new String[WELCOME_MESSAGES.length +1];
-                            System.arraycopy(tmpWELCOME_MESSAGES, 0, WELCOME_MESSAGES, 0, tmpWELCOME_MESSAGES.length);
-                            WELCOME_MESSAGES[WELCOME_MESSAGES.length-1]= "<html>Add : <u>"+addr.getHostAddress()+"</u></html>";
+                            System.arraycopy(tmpWELCOME_MESSAGES, 0, WELCOME_MESSAGES, 0, tmpWELCOME_MESSAGES.length-1);
+                            WELCOME_MESSAGES[WELCOME_MESSAGES.length-2]= "<html>Adresse de connexion : <u>" + addr.getHostAddress() + "</u></html>";
                         }
                     }
                 }
-            } catch (SocketException se) {
-                se.printStackTrace();
+                    
+                WELCOME_MESSAGES[WELCOME_MESSAGES.length-1] = "======================";
                 
-                String[] tmpWELCOME_MESSAGES = WELCOME_MESSAGES;
-                WELCOME_MESSAGES = new String[WELCOME_MESSAGES.length +1];
-                System.arraycopy(tmpWELCOME_MESSAGES, 0, WELCOME_MESSAGES, 0, tmpWELCOME_MESSAGES.length);
-                WELCOME_MESSAGES[WELCOME_MESSAGES.length-1]= "<html><b style=\"color:#FF0000\";>Réseau inconnu</b></html>";
+            } catch (SocketException se) {
+                WELCOME_MESSAGES = new String[]{"<html><b style=\"color:#FF0000\";>Impossible de trouver l'hôte<b><html>"};
             }
         }
         
