@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import MessageExchange.Whisper;
 
@@ -39,13 +40,15 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
     private final static String TAG = "MAIN_ACTIVITY";
 
     private String username;
+    private String currentMessage = "";
     private boolean isParameterView = true;
 
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("isParameterView",isParameterView);
-        outState.putString("username",username);
+        outState.putBoolean("isParameterView", isParameterView);
+        outState.putString("username", username);
+        outState.putString("currentMessage", currentMessage);
         super.onSaveInstanceState(outState);
 
         //Save the fragment's instance
@@ -59,6 +62,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         if (savedInstanceState != null) {
             isParameterView = savedInstanceState.getBoolean("isParameterView");
             username = savedInstanceState.getString("username");
+            currentMessage = savedInstanceState.getString("currentMessage");
         }
 
         Log.i(TAG, "onCreate: creation de l'activité : " + isParameterView);
@@ -163,6 +167,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         imageSend.setOnClickListener((View v) -> {
             Log.d("WHISPER", "Click send button");
             String message = texte.getText().toString();
+            currentMessage = message;
             texte.setText("");
             Whisper whisper = new Whisper(message);
             chatAdapter.add(new Whisper(whisper));
@@ -195,6 +200,10 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             chatAdapter.notifyDataSetChanged();
             TextView sender = (TextView) findViewById(R.id.senderName);
             sender.setText(whisper.getSenderName());
+            if (currentMessage.equals(whisper.getContent()))
+                Toast.makeText(getApplicationContext(), "Le message correspond à celui envoyé !", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getApplicationContext(), "Le message est différent à celui envoyé !", Toast.LENGTH_LONG).show();
         });
         Log.d("WHISPER", "Message complete");
     }
@@ -252,7 +261,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         }
     }
 
-    public void registerFragment(String mAddress){
+    public void registerFragment(String mAddress) {
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(mTaskFragment, TAG_TASKS_FRAGMENT).commit();
     }
@@ -286,7 +295,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
                     timeout--;
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    Log.e(TAG, "doInBackground: ",e );
+                    Log.e(TAG, "doInBackground: ", e);
                 }
                 if (timeout == 0) {
                     return false;
@@ -303,7 +312,7 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
             showProgress(false);
             Log.i(TAG, "onPostExecute: ");
 
-            activity.onConnectionDone(success,mUsername,mAddress);
+            activity.onConnectionDone(success, mUsername, mAddress);
         }
 
         @Override

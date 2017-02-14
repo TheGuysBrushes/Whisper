@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1111e200-4018-4e25-862f-14c0ad9ebeb2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../JavaWhisper/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../JavaWhisper/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
