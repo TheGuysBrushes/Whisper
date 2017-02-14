@@ -2,19 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1111e200-4018-4e25-862f-14c0ad9ebeb2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/lib/WhisperEncryption-1.0-SNAPSHOT-jar-with-dependencies.jar" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/lib/WhisperEncryption-1.0-SNAPSHOT.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/ParameterActivity.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/build.gradle" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ComThread.java" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/java/com/whisperers/whisper/thread/ComThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_parameter.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_parameter.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/../AndroidWhisper/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../JavaWhisper/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../JavaWhisper/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../JavaWhisper/src/main/java/Client/ClientGUI.java" afterPath="$PROJECT_DIR$/../JavaWhisper/src/main/java/Client/ClientGUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/MessageExchange/MessageReceiver.java" afterPath="$PROJECT_DIR$/src/main/java/MessageExchange/MessageReceiver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/MessageExchange/Whisper.java" afterPath="$PROJECT_DIR$/src/main/java/MessageExchange/Whisper.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -49,7 +42,7 @@
             <state relative-caret-position="162">
               <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
               <folding>
-                <element signature="e#0#1675#0" expanded="false" />
+                <element signature="e#0#1702#0" expanded="false" />
                 <element signature="imports" expanded="false" />
                 <element signature="e#663#664#0" expanded="false" />
                 <element signature="e#690#691#0" expanded="false" />
@@ -74,9 +67,9 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/MessageExchange/MessageReceiver.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1224">
-              <caret line="83" column="59" lean-forward="false" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
+              <caret line="83" column="48" lean-forward="true" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
               <folding>
-                <element signature="e#0#2493#0" expanded="false" />
+                <element signature="e#0#2496#0" expanded="false" />
                 <element signature="imports" expanded="false" />
                 <element signature="e#746#747#0" expanded="false" />
                 <element signature="e#785#786#0" expanded="false" />
@@ -607,7 +600,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1044" extended-state="7" />
+    <frame x="0" y="0" width="1920" height="1044" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -671,7 +664,7 @@
         <state relative-caret-position="1224">
           <caret line="83" column="59" lean-forward="false" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -718,7 +711,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -741,7 +734,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -788,7 +781,7 @@
         <state relative-caret-position="360">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -811,7 +804,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -858,7 +851,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -881,7 +874,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -928,7 +921,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -951,7 +944,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -998,7 +991,7 @@
         <state relative-caret-position="360">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -1032,7 +1025,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -1055,7 +1048,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />
@@ -1169,7 +1162,7 @@
         <state relative-caret-position="162">
           <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
           <folding>
-            <element signature="e#0#1675#0" expanded="false" />
+            <element signature="e#0#1702#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#663#664#0" expanded="false" />
             <element signature="e#690#691#0" expanded="false" />
@@ -1200,9 +1193,9 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/MessageExchange/MessageReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1224">
-          <caret line="83" column="59" lean-forward="false" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
+          <caret line="83" column="48" lean-forward="true" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
           <folding>
-            <element signature="e#0#2493#0" expanded="false" />
+            <element signature="e#0#2496#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#746#747#0" expanded="false" />
             <element signature="e#785#786#0" expanded="false" />

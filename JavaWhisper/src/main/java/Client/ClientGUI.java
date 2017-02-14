@@ -11,8 +11,8 @@ import static MessageExchange.MessageDisplayer.DEFAULT_TEXT;
 import MessageExchange.MessageSender;
 import MessageExchange.MessageWriter;
 import MessageExchange.Whisper;
-import java.awt.Color;
-import java.awt.Desktop;
+
+import java.awt.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +28,8 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-import javax.swing.ListModel;
+import javax.swing.*;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -442,6 +443,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         
         SENDER_NAME= senderName;
         jTabbedPane1.setTitleAt(jTabbedPane1.getSelectedIndex(), SENDER_NAME);
+        jTabbedPane1.setFont(new Font("Lobster Two",Font.ITALIC,18));
     }
     
     /**

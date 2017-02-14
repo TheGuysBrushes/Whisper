@@ -193,6 +193,8 @@ public class MainActivity extends ListActivity implements BackgroundFragment.Tas
         this.runOnUiThread(() -> {
             chatAdapter.add(new Whisper(whisper));
             chatAdapter.notifyDataSetChanged();
+            TextView sender = (TextView) findViewById(R.id.senderName);
+            sender.setText(whisper.getSenderName());
         });
         Log.d("WHISPER", "Message complete");
     }

@@ -6,4 +6,5 @@
     <string name="username">Nom d\'utilisateur</string>
     <string name="error_invalid_address">Adresse IP incorrecte</string>
     <string name="error_field_required">Champ obligatoire</string>
+    <string name="senderName">Anonyme</string>
 </resources>
