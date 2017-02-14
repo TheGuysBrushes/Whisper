@@ -12,6 +12,7 @@ import MessageExchange.MessageSender;
 import MessageExchange.MessageWriter;
 import MessageExchange.Whisper;
 import java.awt.Color;
+import java.awt.Desktop;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,10 +23,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import javax.swing.ListModel;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -131,6 +135,9 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        author_1Item = new javax.swing.JMenuItem();
+        author_2Item = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Whisper");
@@ -196,7 +203,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setText("Connect");
+        jMenu1.setText("Se connecter");
 
         jMenuItem1.setText("Connexion à l'aut'");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -216,8 +223,28 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("About");
+        jMenu2.setText("A propos");
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Contacter les auteurs");
+
+        author_1Item.setText("Florentin Noël");
+        author_1Item.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                author_1ItemActionPerformed(evt);
+            }
+        });
+        jMenu3.add(author_1Item);
+
+        author_2Item.setText("Florian David");
+        author_2Item.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                author_2ItemActionPerformed(evt);
+            }
+        });
+        jMenu3.add(author_2Item);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -274,6 +301,30 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private void messagesListMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messagesListMouseDragged
         // TODO add your handling code here:
     }//GEN-LAST:event_messagesListMouseDragged
+
+    private void author_2ItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_author_2ItemActionPerformed
+        Desktop desktop;
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+            try {
+                desktop.mail(new URI("mailto:fl.david.53@gmail.com?subject=Whisper"));
+            } catch (IOException | URISyntaxException ex) {
+                LOGGER.log(Level.ERROR, "Impossible de créer un mail", ex);
+            }
+        }
+    }//GEN-LAST:event_author_2ItemActionPerformed
+
+    private void author_1ItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_author_1ItemActionPerformed
+        Desktop desktop;
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+            try {
+                desktop.mail(new URI("mailto:flo.noel53@gmail.com?subject=Whisper"));
+            } catch (IOException | URISyntaxException ex) {
+                LOGGER.log(Level.ERROR, "Impossible de créer un mail", ex);
+            }
+        }
+    }//GEN-LAST:event_author_1ItemActionPerformed
 
     /**
      *
@@ -434,9 +485,12 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem author_1Item;
+    private javax.swing.JMenuItem author_2Item;
     private javax.swing.JButton cancelButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
