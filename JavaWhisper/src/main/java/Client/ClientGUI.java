@@ -42,20 +42,21 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     
     private MessageSender sender;
     private String SENDER_NAME = "SENDER_NAME";
+    private String lastReceived;
     private String[] WELCOME_MESSAGES;
     private boolean exchangeStarted;
         
     /**
      * Creates a new chat window
-     * @param canStartChat : Defines if the Client is already connected to an
-     * host (and can send messages right now) or if it's waiting for connection
-     * (must wait for a client connection )
+     * @param isWaitingConnection : Defines if the application is waiting for connection
+     * (must wait for a client connection ) or if it waits for the server to start
      */
-    public ClientGUI(boolean canStartChat) {
-        exchangeStarted= canStartChat;
+    public ClientGUI(boolean isWaitingConnection) {
+        exchangeStarted= false;
 
-        if (canStartChat) {
-            startConversation();
+        if (isWaitingConnection){
+            WELCOME_MESSAGES = new String[]{
+                "Tentatives de connexion au serveur en cours ... ", "========================="};
         } else {
             WELCOME_MESSAGES = new String[]{
                 "<html><i>Attente de la connexion d'un contact</i></html>"};
@@ -79,7 +80,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
                     }
                 }
                     
-                WELCOME_MESSAGES[WELCOME_MESSAGES.length-1] = "======================";
+                WELCOME_MESSAGES[WELCOME_MESSAGES.length-1] = "=========================";
                 
             } catch (SocketException se) {
                 WELCOME_MESSAGES = new String[]{"<html><b style=\"color:#FF0000\";>Impossible de trouver l'hôte<b><html>"};
@@ -90,7 +91,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 //        messagesList.setDropMode(DropMode.INSERT);
         initPlaceHolder();
         
-        if (canStartChat) {
+        if (isWaitingConnection) {
             setLocation(getWidth(), 0);
         }
     }
@@ -129,8 +130,10 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         messagesList = new javax.swing.JList<>();
         messagePanel = new javax.swing.JPanel();
         messageField = new javax.swing.JTextField();
-        sendButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -182,14 +185,6 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         });
         messagePanel.add(messageField, java.awt.BorderLayout.CENTER);
 
-        sendButton.setText("Send");
-        sendButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendButtonActionPerformed(evt);
-            }
-        });
-        messagePanel.add(sendButton, java.awt.BorderLayout.LINE_END);
-
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,6 +192,24 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
             }
         });
         messagePanel.add(cancelButton, java.awt.BorderLayout.LINE_START);
+
+        jButton1.setText("Resend");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jSplitPane1.setRightComponent(jButton1);
+
+        jButton2.setText("Send");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jSplitPane1.setLeftComponent(jButton2);
+
+        messagePanel.add(jSplitPane1, java.awt.BorderLayout.LINE_END);
 
         tabPanel.add(messagePanel, java.awt.BorderLayout.PAGE_END);
 
@@ -251,14 +264,6 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        resetMessageField();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        if ( !(messageField.getText().isEmpty() || messageField.getText().equals(DEFAULT_TEXT)) ) sendMessage();
-    }//GEN-LAST:event_sendButtonActionPerformed
 
     private void messageFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageFieldKeyTyped
         if (messageField.getText().equals(DEFAULT_TEXT)) messageField.setText("");
@@ -327,6 +332,18 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         }
     }//GEN-LAST:event_author_1ItemActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        resetMessageField();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if ( !(messageField.getText().isEmpty() || messageField.getText().equals(DEFAULT_TEXT)) ) sendMessage();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        resendMessage();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      *
      * @param e
@@ -343,6 +360,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     @Override
     public void showMessage(String message) {
         addMessage(new Whisper(message));
+        lastReceived= message;
     }
 
     @Override
@@ -352,6 +370,7 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         } else {
             updateSenderName(message.getSenderName());
             addMessage(message);
+            lastReceived= message.getContent();
         }
     }
 
@@ -439,6 +458,23 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
         }
     }
     
+    public void resendMessage() {
+        try {
+            if (exchangeStarted) {
+                if (lastReceived != null) {
+                    if (!"".equals(lastReceived)) {
+                        sender.sendMessage(lastReceived);
+                        Whisper whisp= new Whisper(lastReceived);
+                        addMessage(whisp);
+                        lastReceived= "";
+                    } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous avez déjà renvoyé le dernier message reçu</i></html>", new Whisper("bl").getSYSTEM()));
+                } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous n'avez pas encore reçu de message</i></html>", new Whisper("bl").getSYSTEM()));
+            } else addMessage(new Whisper("<html><i style=\"color:#FF0000\";>Vous devez attendre la connexion d'un contact</i></html>", new Whisper("bl").getSYSTEM()));
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer le message" + e.getMessage());
+        }
+    }
+    
     public void updateSenderName(String senderName) {
         
         SENDER_NAME= senderName;
@@ -490,18 +526,20 @@ public class ClientGUI extends javax.swing.JFrame implements ActionListener, Mes
     private javax.swing.JMenuItem author_1Item;
     private javax.swing.JMenuItem author_2Item;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField messageField;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JList<Whisper> messagesList;
     private javax.swing.JScrollPane messagesScrollPane;
-    private javax.swing.JButton sendButton;
     private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 

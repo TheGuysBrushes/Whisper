@@ -5,6 +5,7 @@ import MessageExchange.*;
 
 import java.net.InetAddress;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -127,15 +128,32 @@ public class Client {
         generateKeys();
 
         int port = Integer.parseInt(s_port);
-
-        socket = new Socket(InetAddress.getByName(address), port);
-        try {
-            sendKey();
-            receiveKey();
-        } catch (SocketException | UnknownHostException e) {
-            LOGGER.error("SocketException", e);
-        } catch (IOException | ClassNotFoundException e) {
-            LOGGER.error("IOException", e);
+        
+        int timeout= 25;
+        
+        while (timeout > 0){
+            try {
+                socket = new Socket(InetAddress.getByName(address), port);
+                try {
+                    sendKey();
+                    receiveKey();
+                    timeout= 0;
+                } catch (SocketException | UnknownHostException e) {
+                    LOGGER.error("SocketException", e);
+                } catch (IOException | ClassNotFoundException e) {
+                    LOGGER.error("IOException", e);
+                }
+            } catch (IOException ioe) {
+                if (timeout > 0) {
+                    timeout--;
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ie) {
+                        LOGGER.error(ie.getMessage());
+                    }
+                }
+                else throw ioe;
+            }
         }
     }
     
